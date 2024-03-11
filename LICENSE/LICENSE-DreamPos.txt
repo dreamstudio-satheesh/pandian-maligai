@@ -1,0 +1,28 @@
+ElitePOS Software License Agreement
+
+IMPORTANT: BY INSTALLING, COPYING, OR USING THE SOFTWARE, YOU (THE INDIVIDUAL OR LEGAL ENTITY) AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE AGREEMENT.
+
+1. GRANT OF LICENSE: Subject to the terms below, DreamPos hereby grants you a non-exclusive, non-transferable license to install and use the software solely for your internal business operations.
+
+2. COPYRIGHT: The software is licensed, not sold. This agreement only gives you some rights to use the software. DreamPos reserves all other rights. Except as permitted by applicable law or as expressly permitted through this agreement, you must not reverse engineer, decompile, disassemble, alter, duplicate, make copies of, or create derivative works from the software, or its accompanying documentation.
+
+3. RESTRICTIONS: You may not rent, lease, lend, sell, redistribute, sublicense or provide commercial hosting services with the software.
+
+4. SUPPORT SERVICES: DreamPos is not obligated to provide support services for the software. Any supplemental software code or related materials that DreamPos provides to you as part of the support services, in the absence of a separate agreement, will be considered part of the software and subject to the terms and conditions of this agreement.
+
+5. TERMINATION: Without prejudice to any other rights, DreamPos may terminate this agreement if you fail to comply with the terms and conditions of this agreement. In such event, you must destroy all copies of the software and all of its component parts.
+
+6. DISCLAIMER OF WARRANTY: The software is provided "as is" and DreamPos makes no warranty as to its use or performance. DreamPos and its suppliers do not and cannot warrant the performance or results you may obtain by using the software or documentation. Except for any warranty, condition, representation, or term to the extent to which the same cannot or may not be excluded or limited by law applicable to you in your jurisdiction, DreamPos and its suppliers make no warranties conditions, representations, or terms (express or implied whether by statute, common law, custom, usage or otherwise) as to any matter including without limitation non-infringement of third party rights, merchantability, integration, satisfactory quality, or fitness for any particular purpose.
+
+7. LIMITATION OF LIABILITY: To the maximum extent permitted by applicable law, in no event will DreamPos or its suppliers be liable for any special, incidental, indirect, or consequential damages whatsoever (including, without limitation, damages for loss of business profits, business interruption, loss of business information, or any other pecuniary loss) arising out of the use of or inability to use the software or the provision of or failure to provide support services, even if DreamPos has been advised of the possibility of such damages.
+
+8. GOVERNING LAW: This agreement shall be governed by the laws of the jurisdiction where DreamPos is headquartered, without regard to its conflict of laws principles.
+
+BY USING THE SOFTWARE, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS AGREEMENT, UNDERSTAND IT, AND AGREE TO BE BOUND BY ITS TERMS AND CONDITIONS.
+
+IF YOU DO NOT AGREE TO THE TERMS OF THIS AGREEMENT, DO NOT INSTALL OR USE THE SOFTWARE AND, IF APPLICABLE, PROMPTLY RETURN IT TO DREAMPOS.
+
+COPYRIGHT © [Year] ElitePos. ALL RIGHTS RESERVED.
+
+[Your Company Full Address]
+[Contact Information]
