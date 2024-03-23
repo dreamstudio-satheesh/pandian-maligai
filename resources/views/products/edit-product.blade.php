@@ -165,7 +165,7 @@
                             @if ($productType == 'standard')
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Product Cost</label>
+                                        <label>Wholesale Price</label>
                                         <input type="text" wire:model="productCost" class="form-control"
                                             placeholder="Product Cost">
                                         @error('productCost')

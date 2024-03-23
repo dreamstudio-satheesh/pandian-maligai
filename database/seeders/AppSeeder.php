@@ -14,48 +14,20 @@ class AppSeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = [
-            ['id' => '1', 'name' => 'Fruits', 'parent_id' => null, 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '2', 'name' => 'Vegetables', 'parent_id' => null, 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '3', 'name' => 'Dairy', 'parent_id' => null, 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '4', 'name' => 'Bakery', 'parent_id' => null, 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '5', 'name' => 'Beverages', 'parent_id' => null, 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '6', 'name' => 'Citrus Fruits', 'parent_id' => '1', 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '7', 'name' => 'Leafy Greens', 'parent_id' => '2', 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '8', 'name' => 'Cheese', 'parent_id' => '3', 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '9', 'name' => 'Bread', 'parent_id' => '4', 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '10', 'name' => 'Soft Drinks', 'parent_id' => '5', 'created_by' => '1', 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '11', 'name' => 'Grocery', 'parent_id' => null, 'created_by' => null, 'deleted_by' => null, 'created_at' => '2024-03-04 08:05:21', 'updated_at' => '2024-03-04 08:05:21', 'deleted_at' => null],
-            ['id' => '12', 'name' => 'Oil', 'parent_id' => null, 'created_by' => null, 'deleted_by' => null, 'created_at' => '2024-03-04 10:01:19', 'updated_at' => '2024-03-04 10:01:19', 'deleted_at' => null],
-            ['id' => '13', 'name' => 'Snacks', 'parent_id' => null, 'created_by' => null, 'deleted_by' => null, 'created_at' => '2024-03-04 10:18:36', 'updated_at' => '2024-03-04 10:18:36', 'deleted_at' => null],
-            ['id' => '14', 'name' => 'Dried Fruits', 'parent_id' => null, 'created_by' => null, 'deleted_by' => null, 'created_at' => '2024-03-04 10:59:33', 'updated_at' => '2024-03-04 10:59:33', 'deleted_at' => null],
-        ];
+       
 
-        DB::table('categories')->insert($categories);
 
-        $brands = [
-            ['name' => 'Amul', 'created_by' => 1, 'deleted_by' => null], // Dairy Products
-            ['name' => 'Haldiram\'s', 'created_by' => 2, 'deleted_by' => null], // Snacks and Sweets
-            ['name' => 'Patanjali', 'created_by' => 3, 'deleted_by' => null], // Ayurvedic and Organic Products
-            ['name' => 'Dabur', 'created_by' => 4, 'deleted_by' => null], // Ayurvedic and Health Products
-            ['name' => 'Britannia', 'created_by' => 5, 'deleted_by' => null], // Bakery Products
-            ['name' => 'Parle', 'created_by' => 6, 'deleted_by' => null], // Confectionery and Snacks
-            ['name' => 'Aashirvaad', 'created_by' => 7, 'deleted_by' => null], // Flour and Spices
-            ['name' => 'Tata Tea', 'created_by' => 8, 'deleted_by' => null], // Beverages (Tea)
-            ['name' => 'MDH', 'created_by' => 9, 'deleted_by' => null], // Spices
-            ['name' => 'MTR', 'created_by' => 10, 'deleted_by' => null], // Ready-to-Eat Meals and Mixes
-        ];
+      $units = [
+        ['id' => '1', 'name' => 'Kilogram', 'short_name' => 'kg', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_at' => '2024-01-10 07:28:05', 'updated_at' => '2024-01-10 07:28:05'],
+        ['id' => '2', 'name' => 'Grams', 'short_name' => 'gms', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1000', 'created_at' => '2024-01-10 07:28:56', 'updated_at' => '2024-01-10 07:28:56'],
+        ['id' => '3', 'name' => 'Pocket', 'short_name' => 'pkt', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_at' => '2024-01-10 07:29:15', 'updated_at' => '2024-01-10 07:30:14'],
+        ['id' => '4', 'name' => 'Pieces', 'short_name' => 'pcs', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_at' => '2024-01-10 07:30:43', 'updated_at' => '2024-01-10 07:30:43'],
+        ['id' => '5', 'name' => 'Litre ', 'short_name' => 'ltr ', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_at' => '2024-01-10 14:17:25', 'updated_at' => '2024-01-10 14:17:25'],
+        ['id' => '6', 'name' => 'Milli Litre ', 'short_name' => 'ml ', 'base_unit' => '5', 'operator' => '*', 'operator_value' => '1000', 'created_at' => '2024-01-10 14:18:46', 'updated_at' => '2024-01-10 14:18:46'],
+        ['id' => '7', 'name' => 'Box ', 'short_name' => 'box ', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_at' => '2024-01-12 06:37:43', 'updated_at' => '2024-01-12 06:37:43'],
+        ['id' => '8', 'name' => 'Bag ', 'short_name' => 'bag ', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_at' => '2024-01-15 17:39:11', 'updated_at' => '2024-01-15 17:39:11'],
+    ];
 
-        DB::table('brands')->insert($brands);
-
-        $units = [
-            ['id' => '1', 'name' => 'Kilogram', 'short_name' => 'kg', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_by' => null, 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '2', 'name' => 'Gram', 'short_name' => 'g', 'base_unit' => '1', 'operator' => '/', 'operator_value' => '1000', 'created_by' => null, 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '3', 'name' => 'Litre', 'short_name' => 'l', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_by' => null, 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '4', 'name' => 'Milliliter', 'short_name' => 'ml', 'base_unit' => '3', 'operator' => '/', 'operator_value' => '1000', 'created_by' => null, 'deleted_by' => null, 'created_at' => null, 'updated_at' => null, 'deleted_at' => null],
-            ['id' => '5', 'name' => 'package', 'short_name' => 'pkg', 'base_unit' => null, 'operator' => '*', 'operator_value' => '1', 'created_by' => null, 'deleted_by' => null, 'created_at' => '2024-03-04 08:50:54', 'updated_at' => '2024-03-04 08:50:54', 'deleted_at' => null],
-            ['id' => '6', 'name' => 'Pieces', 'short_name' => 'pcs', 'base_unit' => null , 'operator' => '/', 'operator_value' => '100', 'created_by' => null, 'deleted_by' => null, 'created_at' => '2024-03-04 08:51:31', 'updated_at' => '2024-03-04 08:51:31', 'deleted_at' => null],
-        ];
 
         DB::table('units')->insert($units);
 

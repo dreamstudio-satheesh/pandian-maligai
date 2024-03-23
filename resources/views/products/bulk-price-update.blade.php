@@ -26,7 +26,7 @@
 
                 <th>Price</th>
 
-                <th>Cost</th>
+                <th>Wholesale Rate</th>
 
                 <th>Actions</th>
 

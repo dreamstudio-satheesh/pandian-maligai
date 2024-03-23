@@ -39,7 +39,7 @@
                 </th>
 
                 <th wire:click="sortBy('cost')">
-                    Cost
+                    Wholesale 
                     @if ($sortField === 'cost')
                         <span
                             class="mdi {{ $sortDirection === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending' }}"></span>
