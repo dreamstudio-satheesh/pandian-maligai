@@ -23,6 +23,7 @@ class AddProduct extends Component
         $variants = [];
     public $newCategoryName, $newBrandName;
     public $productName,
+        $productName_ta,
         $productCode,
         $category_id,
         $brand_id,
@@ -67,6 +68,7 @@ class AddProduct extends Component
     {
         $rules = [
             'productName' => 'required|string|max:255',
+            'productName_ta' => 'nullable|string|max:255',
             'productCode' => 'required|string|max:255|unique:products,sku',
             'category_id' => 'nullable|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
@@ -116,6 +118,7 @@ class AddProduct extends Component
         
         $product = new Product();
         $product->name = $validatedData['productName'];
+        $product->name_ta = $validatedData['productName_ta'];
         $product->sku = $validatedData['productCode'];
         $product->description = $validatedData['details'] ?? null;
         $product->product_type = $validatedData['productType'];

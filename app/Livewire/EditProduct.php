@@ -23,7 +23,7 @@ class EditProduct extends Component
         $saleUnits = [],
         $purchaseUnits = [],
         $variants = [];
-    public $productName, $productCode, $category_id, $brand_id, $orderTax, $taxMethod, $image, $details;
+    public $productName, $productName_ta, $productCode, $category_id, $brand_id, $orderTax, $taxMethod, $image, $details;
     public $productType;
     public $productCost, $productPrice, $unit_id, $unit_sale_id, $unit_purchase_id, $minimumSaleQuantity, $stockAlert;
 
@@ -36,6 +36,7 @@ class EditProduct extends Component
 
         $validatedData = $this->validate([
             'productName' => 'required|string|max:255',
+            'productName_ta' => 'nullable|string|max:255',
             'productCode' => ['required', 'string', 'max:255', Rule::unique('products', 'sku')->ignore($this->productId)],
             'category_id' => 'nullable|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
@@ -71,6 +72,7 @@ class EditProduct extends Component
         $previousProductType = $product->product_type; // store the previous product type
 
         $product->name = $validatedData['productName'];
+        $product->name_ta = $validatedData['productName_ta'];
         $product->sku = $validatedData['productCode'];
         $product->description = $validatedData['details'] ?? null;
         $product->product_type = $validatedData['productType'];
@@ -167,6 +169,7 @@ class EditProduct extends Component
             if ($product) {
                 $this->productId = $productId;
                 $this->productName = $product->name;
+                $this->productName_ta = $product->name_ta;
                 $this->productCode = $product->sku;
                 $this->category_id = $product->category_id;
                 $this->brand_id = $product->brand_id;

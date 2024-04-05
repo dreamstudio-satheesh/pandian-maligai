@@ -39,6 +39,16 @@
                                 @enderror
                             </div>
 
+                             <!-- Product Name -->
+                             <div class="form-group col-md-4">
+                                <label>Name Tamil</label>
+                                <input type="text" wire:model="productName_ta" class="form-control"
+                                    placeholder="Enter Name" autofocus>
+                                @error('productName_ta')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                             <!-- Product Code -->
                             <div class="form-group col-md-4">
                                 <label>Product Code*</label>
