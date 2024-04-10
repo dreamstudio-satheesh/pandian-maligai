@@ -626,8 +626,11 @@ $(document).ready(function () {
                 $("#shippingAmount").val("");
                 $("#grandTotal").text("0.00");
 
+                window.open('http://localhost/pos/' + response.salesId, '_blank');
+
+
                 // Optionally, you can refresh the page or redirect the user
-                location.reload(); // Refresh the page
+               location.reload(); // Refresh the page
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
