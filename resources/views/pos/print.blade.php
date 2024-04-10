@@ -61,7 +61,7 @@
                 <tbody>
                     @foreach ($invoice->items as $item)
                         <tr>
-                            <td>{{ $item->name_ta }}</td>
+                            <td style="font-size: x-small;">{{ $item->product->name_ta }}</td>
                             <td>{{ $item->price }}</td>
                             <td>{{ $item->quantity }}</td>
                             <td>{{ $item->subtotal }}</td>

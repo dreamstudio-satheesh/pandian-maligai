@@ -36,6 +36,6 @@ class SalesItem extends Model
     }
 
     public function product() {
-        return $this->belongsTo(Product::class)->withTrashed()->select(['id', 'name','sku']);
+        return $this->belongsTo(Product::class)->withTrashed()->select(['id', 'name','name_ta','sku']);
     }
 }
