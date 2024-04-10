@@ -84,6 +84,33 @@ function updateGrandTotal() {
         grandTotalElement.textContent = `₹ ${(+grandTotal).toFixed(2)}`;
 }
 
+function updateWeight(productIdentifier, newWeight, item, weightInput) {
+    const itemIndex = cart.findIndex(item => item.productIdentifier === productIdentifier);
+    if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
+        newWeight = parseFloat(newWeight).toFixed(3);  // Format new weight
+
+        console.log(newWeight);
+        cart[itemIndex].weight = newWeight;
+
+        // Recalculate the price based on the new weight
+        const newPrice = cart[itemIndex].originalPrice * newWeight;
+        cart[itemIndex].productPrice = newPrice.toFixed(2);  // Format price to 2 decimal places
+
+        // Update the weight input in case it wasn't formatted on input
+        weightInput.value = newWeight;
+
+        // Update the price input on the page
+        const priceInput = weightInput.closest('tr').querySelector('.price-input');
+        priceInput.value = newPrice.toFixed(2);
+
+        // Optionally, update the subtotal and grand total
+        updateCartTable();
+    } else {
+        console.error("Invalid weight or item not found");
+    }
+}
+
+
 function updatePrice(productIdentifier, newPrice) {
     newPrice = parseFloat(newPrice);
     const productIndex = cart.findIndex(
@@ -234,6 +261,8 @@ function addToCart(product) {
                 productIdentifier: productIdentifier,
                 productName: product.name,
                 productPrice: parseFloat(product.price),
+                originalPrice: parseFloat(product.price),
+                weight: 1,
                 quantity: 1,
                 subtotal: parseFloat(product.price),
                 stock: stocksModuleEnabled ? parseInt(product.stock, 10) : null,
@@ -274,6 +303,22 @@ function updateCartTable() {
         nameCell.textContent = item.productName;
         row.appendChild(nameCell);
 
+         // Weight Input
+         const weightInput = document.createElement("input");
+         weightInput.type = "text";
+         weightInput.classList.add("form-control", "input-sm", "weight-input");
+         weightInput.value = parseFloat(item.weight).toFixed(3); 
+         weightInput.addEventListener(
+             "input",
+             debounce((event) => {
+                updateWeight(item.productIdentifier, event.target.value, item, weightInput);
+            }, 500)
+         );
+ 
+         const weightCell = document.createElement("td");
+         weightCell.appendChild(weightInput);
+         row.appendChild(weightCell);
+
         // Price Input
         const priceInput = document.createElement("input");
         priceInput.type = "text";
@@ -286,9 +331,12 @@ function updateCartTable() {
             })
         );
 
+
+
         const priceCell = document.createElement("td");
         priceCell.appendChild(priceInput);
         row.appendChild(priceCell);
+        
 
         // Quantity Input with Debounce
         const quantityInput = document.createElement("input");
@@ -354,7 +402,7 @@ function updateCartTable() {
         // Remove Button
         const removeButton = document.createElement("button");
         removeButton.classList.add("btn", "btn-sm", "btn-danger");
-        removeButton.textContent = "Remove";
+        removeButton.textContent = "X";
         removeButton.addEventListener("click", () => {
             removeFromCart(item.productIdentifier);
         });
@@ -626,6 +674,23 @@ $(document).ready(function () {
                 // Optionally, clear the input fields
                 $('#newCustomerName').val('');
                 $('#newCustomerPhone').val('');
+            }
+        });
+    });
+
+
+    $('#customerType').change(function() {
+        var customerType = $(this).val(); // Get the selected customer type
+        var queryParams = $.param({ type: customerType });
+
+        $.ajax({
+            url: customerTypeUrl + "?" + queryParams,
+            type: "GET",
+            success: function(response) {
+                location.reload(); // Refresh the page
+            },
+            error: function(xhr, status, error) {
+                console.log('Error:', xhr.responseText); // Handle errors
             }
         });
     });

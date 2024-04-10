@@ -52,6 +52,16 @@ class SalesController extends Controller
         abort(404);
     }
 
+    public function customer_type(Request $request)
+    {
+        $customerType = $request->input('type'); // Retrieve the customer type from the request
+
+        // Set the customer type in the session
+        session(['customer_type' => $customerType]);
+
+        return $request->all();
+    }
+
     public function create()
     {
         $customers = Customer::select('id', 'name', 'phone')->get();
@@ -114,7 +124,12 @@ class SalesController extends Controller
 
                     // Update product name and price based on variant
                     $variantProduct->name = "{$product->name} - {$variant->name}";
-                    $variantProduct->price = $variant->price;
+                    if (session('customer_type') == 'wholesale') {
+                        $variantProduct->price = $variant->cost; // Set the price to cost if wholesale
+                    }else{
+                        $variantProduct->price = $variant->price;
+                    }
+                   
 
                     // Add variant_id and remove variants array
                     $variantProduct->variant_id = $variant->id;
@@ -129,6 +144,9 @@ class SalesController extends Controller
             } else {
                 // Set variant_id to null for non-variable products
                 $product->variant_id = null;
+                if (session('customer_type') == 'wholesale') {
+                    $product->price = $product->cost; // Set the price to cost if wholesale
+                }
                 $product->current_stock = $this->calculateCurrentStock($product->id, null, $warehouse_id);
                 $transformedProducts->push($product); // Push the product itself if it's not a variant type
             }

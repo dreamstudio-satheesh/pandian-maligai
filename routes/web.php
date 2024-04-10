@@ -68,6 +68,7 @@ if ($installed === true) {
 
         // Sales Routes
         Route::get('sales', [SalesController::class, 'index'])->name('sales.index');
+        Route::get('/sales/customertype', [SalesController::class, 'customer_type'])->name('handleCustomerType');
         Route::get('/search-products', [SalesController::class, 'search'])->name('products.search');
         Route::get('sales/create', [SalesController::class, 'create'])->name('sales.create');
         Route::get('/sales/{id}', [SalesController::class, 'show'])->name('sales.show');

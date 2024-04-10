@@ -46,6 +46,17 @@
 
                                         </div>
                                         @endif
+
+                                        <div class="form-group col-md-6">
+                                            <label>Customer Type</label>
+                                            <select id="customerType" class="form-control">
+                                                <option value='retail'>Select</option>
+                                                <option value='retail' {{ session('customer_type') == 'retail' ? 'selected' : '' }}>Retail</option>
+                                                <option value='wholesale' {{ session('customer_type') == 'wholesale' ? 'selected' : '' }}>Wholesale</option>
+                                            </select>
+
+                                        </div>
+
                                     </div>
                                     <br>
                                     <div class="row">
@@ -72,7 +83,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Product Name</th>
-                                                        <th>Net Unit Price</th>
+                                                        <th>Weight</th>
+                                                        <th>Unit Price</th>
                                                         <th>Quantity</th>
                                                         @if ($moduleStatuses['stocks'])
                                                             <th>Stock</th>
@@ -241,6 +253,8 @@
         var createSaleUrl = "{{ route('sales.createSale') }}";
 
         var addCustomerUrl = "{{ route('customers.addcustomer') }}";
+
+        var customerTypeUrl = "{{ route('handleCustomerType') }}";
         let cart = []; // Initialize the cart as an empty array
 
         const stocksModuleEnabled = @json($moduleStatuses['stocks']);
