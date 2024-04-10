@@ -84,7 +84,7 @@ function updateGrandTotal() {
         grandTotalElement.textContent = `₹ ${(+grandTotal).toFixed(2)}`;
 }
 
-function updateWeight(productIdentifier, newWeight, item, weightInput) {
+function updateWeight(productIdentifier, newWeight, item , weightInput) {
     const itemIndex = cart.findIndex(item => item.productIdentifier === productIdentifier);
     if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
         newWeight = parseFloat(newWeight).toFixed(3);  // Format new weight
@@ -96,6 +96,9 @@ function updateWeight(productIdentifier, newWeight, item, weightInput) {
         const newPrice = cart[itemIndex].originalPrice * newWeight;
         cart[itemIndex].productPrice = newPrice.toFixed(2);  // Format price to 2 decimal places
 
+        // Update the subtotal for this item
+        cart[itemIndex].subtotal = (cart[itemIndex].quantity * newPrice).toFixed(2);
+
         // Update the weight input in case it wasn't formatted on input
         weightInput.value = newWeight;
 
@@ -103,12 +106,13 @@ function updateWeight(productIdentifier, newWeight, item, weightInput) {
         const priceInput = weightInput.closest('tr').querySelector('.price-input');
         priceInput.value = newPrice.toFixed(2);
 
-        // Optionally, update the subtotal and grand total
+        // Update the cart table, which should recalculate the grand total
         updateCartTable();
     } else {
         console.error("Invalid weight or item not found");
     }
 }
+
 
 
 function updatePrice(productIdentifier, newPrice) {
