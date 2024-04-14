@@ -43,7 +43,7 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            @if ($moduleStatuses['categories'])
+                          {{--   @if ($moduleStatuses['categories'])
                                 <!-- Category Dropdown with Modal -->
                                 @include('partials.category-dropdown', [
                                     'categories' => $categories,
@@ -57,7 +57,7 @@
                                     'brands' => $brands,
                                     'errors' => $errors,
                                 ])
-                            @endif
+                            @endif --}}
 
                           {{--   <div class="form-group col-md-4">
                                 <label>Order Tax*</label>
@@ -84,13 +84,13 @@
                             </div> --}}
 
                             <!-- Image Upload -->
-                            <div class="form-group col-md-4">
+                          {{--   <div class="form-group col-md-4">
                                 <label>Image*</label>
                                 <input type="file" wire:model="image" class="form-control">
                                 @error('image')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             <!-- Details -->
                             <div class="form-group col-md-4">
