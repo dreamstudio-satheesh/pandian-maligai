@@ -43,6 +43,8 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                        </div>
                           {{--   @if ($moduleStatuses['categories'])
                                 <!-- Category Dropdown with Modal -->
                                 @include('partials.category-dropdown', [
