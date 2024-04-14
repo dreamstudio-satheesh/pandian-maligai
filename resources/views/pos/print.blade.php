@@ -55,7 +55,6 @@
                         <th>Name</th>
                         <th>Price</th>
                         <th>Qty</th>
-                        <th>Weight</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -64,8 +63,7 @@
                         <tr>
                             <td style="font-size: x-small;">{{ $item->product->name_ta }}</td>
                             <td>{{ $item->price }}</td>
-                            <td>{{ $item->quantity }}</td>
-                            <td>{{ $item->weight }}</td>
+                            <td>{{ $item->weight }} Kg</td>
                             <td>{{ $item->subtotal }}</td>
                         </tr>
                     @endforeach

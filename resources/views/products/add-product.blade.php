@@ -43,8 +43,6 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-
-                        </div>
                           {{--   @if ($moduleStatuses['categories'])
                                 <!-- Category Dropdown with Modal -->
                                 @include('partials.category-dropdown', [
@@ -86,7 +84,7 @@
                             </div> --}}
 
                             <!-- Image Upload -->
-                           {{--  <div class="form-group col-md-4">
+                            <div class="form-group col-md-4">
                                 <label>Image*</label>
                                 <input type="file" wire:model="image" class="form-control">
                                 @error('image')
@@ -95,7 +93,7 @@
                             </div>
 
                             <!-- Details -->
-                            <div class="form-group col-md-4">
+                          {{--   <div class="form-group col-md-4">
                                 <label>Please provide any details </label>
                                 <textarea wire:model="details" class="form-control" rows="2" placeholder="Please provide any details"></textarea>
                                 @error('details')

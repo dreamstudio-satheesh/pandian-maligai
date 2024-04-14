@@ -298,6 +298,9 @@ function updateCartTable() {
         return;
     }
 
+     // Reverse the cart items
+     cart.reverse();
+
     // Add each cart item as a row in the table
     cart.forEach((item) => {
         const row = document.createElement("tr");
@@ -578,6 +581,8 @@ $(document).ready(function() {
 $(document).ready(function () {
     $("#saleForm").on("submit", function (e) {
         e.preventDefault();
+
+        cart.reverse();
 
         // Prepare form data
         const formData = {
