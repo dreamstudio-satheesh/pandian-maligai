@@ -589,6 +589,7 @@ $(document).ready(function () {
                 productId: item.productId,
                 quantity: item.quantity,
                 variantId: item.variantId,
+                weight: item.weight,
                 productPrice: item.productPrice,
                 // ... add other product details as needed
             })),

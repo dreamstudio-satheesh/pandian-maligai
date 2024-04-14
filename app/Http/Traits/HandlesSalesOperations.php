@@ -99,6 +99,7 @@ trait HandlesSalesOperations
                     'product_id' => $item['productId'],
                     'quantity' => $item['quantity'],
                     'price' => $item['productPrice'],
+                    'weight' => $item['weight'],
                     'variant_id' => $item['variantId'],
                     'subtotal' => $subtotal,
                 ]);
