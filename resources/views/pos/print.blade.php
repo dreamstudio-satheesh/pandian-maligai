@@ -118,7 +118,7 @@
                     <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $invoice->grand_total }}
                     </div>
                 </div>
-                <div class="text-bill-list-in">
+               {{--  <div class="text-bill-list-in">
                     <div class="text-bill-title">Due :</div>
                     <div class="text-bill-value">{{ config('settings.currency_symbol') }}
                         {{ $invoice->grand_total - $invoice->paid_amount }}</div>
@@ -129,7 +129,7 @@
                     <div class="text-bill-title">Cash paid</div>
                     <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $invoice->paid_amount }}
                     </div>
-                </div>
+                </div> --}}
 
             </div>
 
