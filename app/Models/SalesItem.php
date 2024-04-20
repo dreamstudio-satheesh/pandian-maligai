@@ -31,11 +31,11 @@ class SalesItem extends Model
 
     public function variant()
     {
-        return $this->belongsTo(ProductVariant::class)->select(['id', 'name','sku']);
+        return $this->belongsTo(ProductVariant::class)->select(['id', 'name','sku','unit_id']);
       //  return $this->belongsTo(ProductVariant::class)->withTrashed()->select(['id', 'name','sku']);
     }
 
     public function product() {
-        return $this->belongsTo(Product::class)->withTrashed()->select(['id', 'name','name_ta','sku']);
+        return $this->belongsTo(Product::class)->withTrashed()->select(['id', 'name','name_ta','sku','unit_id']);
     }
 }

@@ -63,7 +63,33 @@
                         <tr>
                             <td style="font-size: x-small;">{{ $item->product->name_ta }}</td>
                             <td>{{ $item->price }}</td>
-                            <td>{{ $item->weight }} Kg</td>
+                            <td>{{ $item->weight }} 
+                                @php
+
+                                $unit = App\Models\Unit::find($item->product->unit_id);
+                                if ($item->weight >= 1) {
+                                   
+                                    if ($unit) {
+                                        echo $unit->short_name;
+                                    } 
+                                }elseif ($item->weight < 1) {
+                                    if ($unit) {
+                                        if ($unit->base_unit) {
+                                             echo $unit->short_name;
+                                        }
+                                        else{
+                                          $baseunit = App\Models\Unit::where('base_unit',$item->product->unit_id)->first();
+
+                                          if ($baseunit) {
+                                           echo $baseunit->short_name;
+                                          }
+                                            
+                                        } 
+                                    }
+                                }
+                            @endphp
+                            
+                            </td>
                             <td>{{ $item->subtotal }}</td>
                         </tr>
                     @endforeach
