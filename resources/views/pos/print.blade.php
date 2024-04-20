@@ -52,8 +52,8 @@
             <table class="receipt-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
                         <th>Price</th>
+                        <th>Name</th>
                         <th>Qty</th>
                         <th>Total</th>
                     </tr>
@@ -61,8 +61,8 @@
                 <tbody>
                     @foreach ($invoice->items as $item)
                         <tr>
-                            <td style="font-size: x-small;">{{ $item->product->name_ta }}</td>
                             <td>{{ $item->product->price }}</td>
+                            <td style="font-size: x-small;">{{ $item->product->name_ta }}</td>
                             <td>{{ $item->weight }} 
                                 @php
 
@@ -105,13 +105,13 @@
                     <div class="text-bill-title">Discount: </div>
                     <div class="text-bill-value">-{{ config('settings.currency_symbol') }} {{ $discount }}</div>
                 </div>
-                <div class="text-receipt-seperator"></div>
+               {{--  <div class="text-receipt-seperator"></div>
 
                 <div class="text-bill-list-in">
                     <div class="text-bill-title">Tax({{ $invoice->tax_rate }}%):</div>
                     <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $invoice->tax_amount }}
                     </div>
-                </div>
+                </div> --}}
                 <div class="text-receipt-seperator"></div>
                 <div class="text-bill-list-in">
                     <div class="text-bill-title">Total Bill:</div>
