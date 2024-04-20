@@ -54,6 +54,7 @@
                     <tr>
                         <th>Price</th>
                         <th>Name</th>
+                        <th>Weight</th>
                         <th>Qty</th>
                         <th>Total</th>
                     </tr>
@@ -90,6 +91,7 @@
                             @endphp
                             
                             </td>
+                            <td>{{ $item->quantity }}</td>
                             <td>{{ $item->subtotal }}</td>
                         </tr>
                     @endforeach
