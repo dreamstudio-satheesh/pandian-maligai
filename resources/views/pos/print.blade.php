@@ -64,7 +64,7 @@
                         <tr>
                             <td>{{ $item->product->price }}</td>
                             <td style="font-size: x-small;">{{ $item->product->name_ta }}</td>
-                            <td>{{ $item->weight }} 
+                            <td style="font-size: x-small;">{{ $item->weight }} 
                                 @php
 
                                 $unit = App\Models\Unit::find($item->product->unit_id);
