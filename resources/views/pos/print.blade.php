@@ -62,7 +62,7 @@
                     @foreach ($invoice->items as $item)
                         <tr>
                             <td style="font-size: x-small;">{{ $item->product->name_ta }}</td>
-                            <td>{{ $item->price }}</td>
+                            <td>{{ $item->product->price }}</td>
                             <td>{{ $item->weight }} 
                                 @php
 
