@@ -55,7 +55,6 @@
                         <th>Price</th>
                         <th>Name</th>
                         <th>Weight</th>
-                        <th>Qty</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -63,8 +62,8 @@
                     @foreach ($invoice->items as $item)
                         <tr>
                             <td>{{ $item->product->price }}</td>
-                            <td style="font-size: x-small;">{{ $item->product->name_ta }}</td>
-                            <td style="font-size: x-small;">{{ $item->weight }} 
+                            <td style="font-size: small;">{{ $item->product->name_ta }}</td>
+                            <td style="font-size: small;">{{ $item->weight }} 
                                 @php
 
                                 $unit = App\Models\Unit::find($item->product->unit_id);
@@ -91,7 +90,6 @@
                             @endphp
                             
                             </td>
-                            <td>{{ $item->quantity }}</td>
                             <td>{{ $item->subtotal }}</td>
                         </tr>
                     @endforeach
