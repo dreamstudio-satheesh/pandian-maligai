@@ -70,18 +70,18 @@
                                 if ($item->weight >= 1) {
                                    
                                     if ($unit) {
-                                        echo $unit->short_name;
+                                        echo '1 '.$unit->short_name;
                                     } 
                                 }elseif ($item->weight < 1) {
                                     if ($unit) {
                                         if ($unit->base_unit) {
-                                             echo $unit->short_name;
+                                             echo '2 '.$unit->short_name;
                                         }
                                         else{
                                           $baseunit = App\Models\Unit::where('base_unit',$item->product->unit_id)->first();
 
                                           if ($baseunit) {
-                                           echo $baseunit->short_name;
+                                           echo '4 '.$baseunit->short_name;
                                           }
                                             
                                         } 
