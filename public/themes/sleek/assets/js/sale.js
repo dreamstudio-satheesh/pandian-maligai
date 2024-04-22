@@ -346,7 +346,7 @@ function updateCartTable() {
         
 
         // Quantity Input with Debounce
-        const quantityInput = document.createElement("input");
+      /*   const quantityInput = document.createElement("input");
         quantityInput.type = "number";
         quantityInput.classList.add("form-control", "input-sm");
         quantityInput.value = item.quantity;
@@ -384,7 +384,7 @@ function updateCartTable() {
 
         const quantityCell = document.createElement("td");
         quantityCell.appendChild(quantityInputGroup);
-        row.appendChild(quantityCell);
+        row.appendChild(quantityCell); */
 
         // Stock Cell (only if stocksModuleEnabled is true)
         if (stocksModuleEnabled) {

@@ -85,7 +85,7 @@
                                                         <th>Product Name</th>
                                                         <th>Weight</th>
                                                         <th>Unit Price</th>
-                                                        <th>Quantity</th>
+                                                       {{--  <th>Quantity</th> --}}
                                                         @if ($moduleStatuses['stocks'])
                                                             <th>Stock</th>
                                                         @endif
