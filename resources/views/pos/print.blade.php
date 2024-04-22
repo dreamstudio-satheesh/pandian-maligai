@@ -65,7 +65,7 @@
                             <td style="font-size: small;">{{ $item->product->name_ta }}</td>
                             <td style="font-size: small;">
                                 @php
-
+                        if (!function_exists('formatWeight')) {
                             function formatWeight($value) {
                                 // Check if the value is an integer
                                 if (floor($value) == $value) {
@@ -75,6 +75,7 @@
                                     return (int) ($value * 1000);
                                 }
                              }
+                         }    
 
                              $weight =formatWeight($item->weight);
 
