@@ -272,7 +272,7 @@ function addToCart(product) {
                 stock: stocksModuleEnabled ? parseInt(product.stock, 10) : null,
                 variantId: product.variant_id,
             };
-            cart.push(newCartItem);
+            cart.unshift(newCartItem);
         } else {
             toastr.error("Cannot add to cart, product is out of stock !");
             return;
@@ -298,8 +298,7 @@ function updateCartTable() {
         return;
     }
 
-     // Reverse the cart items
-     cart.reverse();
+    
 
     // Add each cart item as a row in the table
     cart.forEach((item) => {
@@ -582,7 +581,7 @@ $(document).ready(function () {
     $("#saleForm").on("submit", function (e) {
         e.preventDefault();
 
-        cart.reverse();
+       
 
         // Prepare form data
         const formData = {

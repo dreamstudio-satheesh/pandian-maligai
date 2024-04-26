@@ -60,10 +60,10 @@
                 </thead>
                 <tbody>
                     @foreach ($invoice->items as $item)
-                        <tr>
+                        <tr class="text-receipt-seperator">
                             <td>{{ $item->product->price }}</td>
                             <td style="font-size: small;">{{ $item->product->name_ta }}</td>
-                            <td style="font-size: small;">
+                            <td style="font-size: small;" >
                                 @php
                         if (!function_exists('formatWeight')) {
                             function formatWeight($value) {
@@ -101,9 +101,10 @@
                                     }
                                 }
                             @endphp
-                            
+                           
                             </td>
                             <td>{{ $item->subtotal }}</td>
+                           
                         </tr>
                     @endforeach
 
