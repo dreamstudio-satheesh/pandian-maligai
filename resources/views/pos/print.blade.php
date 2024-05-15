@@ -54,7 +54,7 @@
                     <tr>
                         <th>Price</th>
                         <th>Name</th>
-                        <th>Weight</th>
+                        <th>Unit</th>
                         <th>Total</th>
                     </tr>
                 </thead>
