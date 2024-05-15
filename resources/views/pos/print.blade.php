@@ -63,45 +63,12 @@
                         <tr class="text-receipt-seperator">
                             <td>{{ $item->product->price }}</td>
                             <td style="font-size: small;">{{ $item->product->name_ta }}</td>
-                            <td style="font-size: small;" >
-                                @php
-                        if (!function_exists('formatWeight')) {
-                            function formatWeight($value) {
-                                // Check if the value is an integer
-                                if (floor($value) == $value) {
-                                    return (int) $value;  // Cast float to int
-                                } else {
-                                    // Value is fractional, convert to grams representation
-                                    return (int) ($value * 1000);
-                                }
-                             }
-                         }    
-
-                             $weight =formatWeight($item->weight);
-
-                                $unit = App\Models\Unit::find($item->product->unit_id);
-                                if ($item->weight >= 1) {
-                                   
-                                    if ($unit) {
-                                        echo $weight.' '.$unit->short_name;
-                                    } 
-                                }elseif ($item->weight < 1) {
-                                    if ($unit) {
-                                        if ($unit->base_unit) {
-                                             echo $weight.' '.$unit->short_name;
-                                        }
-                                        else{
-                                          $baseunit = App\Models\Unit::where('base_unit',$item->product->unit_id)->first();
-
-                                          if ($baseunit) {
-                                           echo $weight.' '.$baseunit->short_name;
-                                          }
-                                            
-                                        } 
-                                    }
-                                }
-                            @endphp
-                           
+                            <td style="font-size: small;">
+                                @if($item->unit)
+                                    {{ $item->unit->short_name }}
+                                @else
+                                    N/A
+                                @endif
                             </td>
                             <td>{{ $item->subtotal }}</td>
                            

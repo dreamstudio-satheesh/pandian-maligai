@@ -35,6 +35,17 @@ class Product extends Model implements HasMedia
         return $this->belongsTo(Category::class);
     }
 
+     // Assuming a product has a base unit and related sub-units
+     public function baseUnit()
+     {
+         return $this->belongsTo(Unit::class, 'unit_id'); // Example foreign key
+     }
+ 
+     public function subUnits()
+     {
+         return $this->hasMany(Unit::class, 'base_unit', 'unit_id');
+     }
+
     public function unit()
     {
         return $this->belongsTo(Unit::class);

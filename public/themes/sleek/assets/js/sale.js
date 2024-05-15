@@ -84,34 +84,84 @@ function updateGrandTotal() {
         grandTotalElement.textContent = `₹ ${(+grandTotal).toFixed(2)}`;
 }
 
-function updateWeight(productIdentifier, newWeight, item , weightInput) {
+
+
+
+function updateWeight(productIdentifier, newWeight, item, weightInput) {
     const itemIndex = cart.findIndex(item => item.productIdentifier === productIdentifier);
     if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
         newWeight = parseFloat(newWeight).toFixed(3);  // Format new weight
+        newWeight = parseFloat(newWeight); // Ensure newWeight is a number
 
-        console.log(newWeight);
         cart[itemIndex].weight = newWeight;
 
-        // Recalculate the price based on the new weight
-        const newPrice = cart[itemIndex].originalPrice * newWeight;
-        cart[itemIndex].productPrice = newPrice.toFixed(2);  // Format price to 2 decimal places
+        // Retrieve the unit details
+        const unit = item.units ? item.units.find(u => u.id === item.selectedUnit?.id) : null;
 
-        // Update the subtotal for this item
-        cart[itemIndex].subtotal = (cart[itemIndex].quantity * newPrice).toFixed(2);
+        let adjustedWeight = newWeight;
+        if (unit) {
+            const operatorValue = parseFloat(unit.operator_value);
+            if (isNaN(operatorValue)) {
+                console.error("Invalid operator value:", unit.operator_value);
+                return;
+            }
 
-        // Update the weight input in case it wasn't formatted on input
-        weightInput.value = newWeight;
+            // Apply the operator and operator_value to the new weight
+            switch (unit.operator) {
+                case '*':
+                    adjustedWeight = newWeight * operatorValue;
+                    break;
+                case '/':
+                    adjustedWeight = newWeight / operatorValue;
+                    break;
+                case '+':
+                    adjustedWeight = newWeight + operatorValue;
+                    break;
+                case '-':
+                    adjustedWeight = newWeight - operatorValue;
+                    break;
+                default:
+                    console.error("Unsupported operator:", unit.operator);
+                    return;
+            }
 
-        // Update the price input on the page
-        const priceInput = weightInput.closest('tr').querySelector('.price-input');
-        priceInput.value = newPrice.toFixed(2);
+            // Update the selected unit in the cart item
+            cart[itemIndex].selectedUnit = unit;
+        } else {
+            console.warn("Unit not found, defaulting to new weight calculation");
+            cart[itemIndex].selectedUnit = null; // or handle appropriately
+        }
 
-        // Update the cart table, which should recalculate the grand total
-        updateCartTable();
+        // Ensure originalPrice is set
+        const originalPrice = parseFloat(cart[itemIndex].originalPrice);
+        if (isNaN(originalPrice)) {
+            console.error("Invalid original price:", cart[itemIndex].originalPrice);
+            return;
+        }
+
+        const newPrice = originalPrice * adjustedWeight; // New price for the weight
+
+        // Ensure newPrice is a number before updating
+        if (!isNaN(newPrice)) {
+            // Update the subtotal for this item
+            cart[itemIndex].subtotal = (cart[itemIndex].quantity * newPrice).toFixed(2);
+
+            // Update the weight input in case it wasn't formatted on input
+            weightInput.value = newWeight;
+
+            // Update the cart table, which should recalculate the grand total
+            updateCartTable();
+        } else {
+            console.error("Calculation error: newPrice is NaN");
+        }
     } else {
         console.error("Invalid weight or item not found");
     }
 }
+
+
+
+
 
 
 
@@ -214,52 +264,41 @@ function debounce(func, timeout = 800) {
 }
 
 function addToCart(product) {
-
-    
-    // Create a unique identifier that considers both product ID and variant ID
-    const productIdentifier = product.variant_id ? `${product.id}-${product.variant_id}` : `${product.id}`;
+    // Create a unique identifier that considers the product ID
+    const productIdentifier = `${product.id}`;
 
     const existingProductIndex = cart.findIndex(
         (item) => item.productIdentifier === productIdentifier
     );
 
     if (warehousesModuleEnabled) {
-    // disable the warehouseSelect dropdown so can manage item stock
-    document.getElementById('warehouseSelect').disabled = true;
+        // Disable the warehouseSelect dropdown so can manage item stock
+        document.getElementById('warehouseSelect').disabled = true;
     }
 
-    
     document.getElementById('search-box').value = '';
 
     // If the stocks module is enabled and the stock is less than one, display an error message.
     if (stocksModuleEnabled && (product.stock < 1 || product.stock === null)) {
-        toastr.error(
-            "Cannot add to cart, product is out of stock or stock data is unavailable."
-        );
+        toastr.error("Cannot add to cart, product is out of stock or stock data is unavailable.");
         return;
     }
 
     if (existingProductIndex !== -1) {
         // Product exists, increase quantity if stock permits or if stock module is not enabled
         const potentialNewQuantity = cart[existingProductIndex].quantity + 1;
-        if (
-            !stocksModuleEnabled ||
-            (stocksModuleEnabled && product.stock >= potentialNewQuantity)
-        ) {
+        if (!stocksModuleEnabled || (stocksModuleEnabled && product.stock >= potentialNewQuantity)) {
             cart[existingProductIndex].quantity = potentialNewQuantity;
-            cart[existingProductIndex].subtotal =
-                cart[existingProductIndex].quantity *
-                cart[existingProductIndex].productPrice;
+            cart[existingProductIndex].subtotal = cart[existingProductIndex].quantity * cart[existingProductIndex].productPrice;
         } else {
             toastr.error("Cannot add more. Not enough stock.");
             return;
         }
     } else {
+
+       // console.log(product);
         // New product, add to cart if stock permits or if stock module is not enabled
-        if (
-            !stocksModuleEnabled ||
-            (stocksModuleEnabled && product.stock >= 1)
-        ) {
+        if (!stocksModuleEnabled || (stocksModuleEnabled && product.stock >= 1)) {
             const newCartItem = {
                 productId: product.id,
                 productIdentifier: productIdentifier,
@@ -270,16 +309,20 @@ function addToCart(product) {
                 quantity: 1,
                 subtotal: parseFloat(product.price),
                 stock: stocksModuleEnabled ? parseInt(product.stock, 10) : null,
-                variantId: product.variant_id,
+                units: product.units,  // Add units to the cart item
+                selectedUnit: product.units && product.units[0] ? product.units[0] : null  // Handle undefined units
             };
             cart.unshift(newCartItem);
         } else {
-            toastr.error("Cannot add to cart, product is out of stock !");
+            toastr.error("Cannot add to cart, product is out of stock!");
             return;
         }
     }
     updateCartTable();
 }
+
+
+
 
 // Function to update cart table in UI
 function updateCartTable() {
@@ -298,8 +341,6 @@ function updateCartTable() {
         return;
     }
 
-    
-
     // Add each cart item as a row in the table
     cart.forEach((item) => {
         const row = document.createElement("tr");
@@ -309,21 +350,21 @@ function updateCartTable() {
         nameCell.textContent = item.productName;
         row.appendChild(nameCell);
 
-         // Weight Input
-         const weightInput = document.createElement("input");
-         weightInput.type = "text";
-         weightInput.classList.add("form-control", "input-sm", "weight-input");
-         weightInput.value = parseFloat(item.weight).toFixed(3); 
-         weightInput.addEventListener(
-             "input",
-             debounce((event) => {
+        // Weight Input
+        const weightInput = document.createElement("input");
+        weightInput.type = "text";
+        weightInput.classList.add("form-control", "input-sm", "weight-input");
+        weightInput.value = parseFloat(item.weight);
+        weightInput.addEventListener(
+            "input",
+            debounce((event) => {
                 updateWeight(item.productIdentifier, event.target.value, item, weightInput);
             }, 500)
-         );
- 
-         const weightCell = document.createElement("td");
-         weightCell.appendChild(weightInput);
-         row.appendChild(weightCell);
+        );
+
+        const weightCell = document.createElement("td");
+        weightCell.appendChild(weightInput);
+        row.appendChild(weightCell);
 
         // Price Input
         const priceInput = document.createElement("input");
@@ -337,53 +378,50 @@ function updateCartTable() {
             })
         );
 
-
-
         const priceCell = document.createElement("td");
         priceCell.appendChild(priceInput);
         row.appendChild(priceCell);
-        
 
-        // Quantity Input with Debounce
-      /*   const quantityInput = document.createElement("input");
-        quantityInput.type = "number";
-        quantityInput.classList.add("form-control", "input-sm");
-        quantityInput.value = item.quantity;
-        quantityInput.min = 1;
-        quantityInput.addEventListener(
-            "input",
-            debounce((event) => {
-                updateQuantity(item.productIdentifier, event.target.value);
-            })
-        );
+       
+        // Units Dropdown
+        const unitSelect = document.createElement("select");
+        unitSelect.classList.add("form-control", "input-sm");
 
-        const decrementButton = document.createElement("button");
-        decrementButton.innerHTML =
-            '<span class="mdi mdi-24px mdi-minus-circle-outline"></span>';
-        decrementButton.style.color = "#8a909d";
-        decrementButton.type = "button";
-        decrementButton.addEventListener("click", () => {
-            decrementQuantity(item.productIdentifier);
+        if (Array.isArray(item.units) && item.units.length > 0) {
+            item.units.forEach((unit) => {
+                const option = document.createElement("option");
+                option.value = unit.id;
+                option.text = unit.short_name;
+                if (unit.id === item.selectedUnit?.id) {
+                    option.selected = true;
+                }
+                unitSelect.appendChild(option);
+            });
+        } else {
+            // Handle the case where there are no units available
+            const option = document.createElement("option");
+            option.value = "";
+            option.text = "No units available";
+            unitSelect.appendChild(option);
+        }
+
+        // Add event listener for change
+        unitSelect.addEventListener("change", (event) => {
+            if (Array.isArray(item.units)) {
+                item.selectedUnit = item.units.find(
+                    (unit) => unit.id == event.target.value
+                );
+            } else {
+                item.selectedUnit = null; // or handle appropriately
+            }
+            updateCartTable();
         });
 
-        const incrementButton = document.createElement("button");
-        incrementButton.innerHTML =
-            '<span class="mdi mdi-24px mdi-plus-circle-outline"></span>';
-        incrementButton.style.color = "#8a909d";
-        incrementButton.type = "button";
-        incrementButton.addEventListener("click", () => {
-            incrementQuantity(item.productIdentifier);
-        });
+        // Append the select element to the cell and the row
+        const unitCell = document.createElement("td");
+        unitCell.appendChild(unitSelect);
+        row.appendChild(unitCell);
 
-        const quantityInputGroup = document.createElement("div");
-        quantityInputGroup.classList.add("input-group");
-        quantityInputGroup.appendChild(decrementButton);
-        quantityInputGroup.appendChild(quantityInput);
-        quantityInputGroup.appendChild(incrementButton);
-
-        const quantityCell = document.createElement("td");
-        quantityCell.appendChild(quantityInputGroup);
-        row.appendChild(quantityCell); */
 
         // Stock Cell (only if stocksModuleEnabled is true)
         if (stocksModuleEnabled) {
@@ -424,6 +462,7 @@ function updateCartTable() {
     // Update the grand total after cart is updated
     updateGrandTotal();
 }
+
 
 
 
@@ -500,7 +539,7 @@ function displaySearchResults(products) {
     products.forEach((product) => {
         const li = document.createElement("li");
         li.classList.add("list-group-item");
-        let productText = product.name + " - " + product.price;
+        let productText = product.name + " - ₹ " + product.price;
         if (stocksModuleEnabled && product.current_stock !== undefined) {
             productText += " - Stock: " + product.current_stock;
         }
@@ -508,30 +547,27 @@ function displaySearchResults(products) {
         li.setAttribute("data-product-id", product.id);
         li.setAttribute("data-product-name", product.name);
         li.setAttribute("data-product-price", product.price);
-        li.setAttribute("data-variant-id", product.variant_id || "");
-         // Enable tab index for each list item
+        // Enable tab index for each list item
         li.setAttribute("tabIndex", 1);
 
         if (stocksModuleEnabled) {
             li.setAttribute("data-product-stock", product.current_stock);
         }
 
-         // Event handler to add product to cart
-         const handleAddToCart = () => {
+        // Event handler to add product to cart
+        const handleAddToCart = () => {
             const productToAdd = {
                 id: li.getAttribute("data-product-id"),
                 name: li.getAttribute("data-product-name"),
                 price: li.getAttribute("data-product-price"),
-                variant_id: li.getAttribute("data-variant-id"),
-                stock: stocksModuleEnabled
-                    ? li.getAttribute("data-product-stock")
-                    : null,
+                stock: stocksModuleEnabled ? li.getAttribute("data-product-stock") : null,
+                units: product.units ? product.units.filter(unit => unit !== null) : [], // Ensure units are included
             };
 
             addToCart(productToAdd);
             searchResultsDiv.innerHTML = "";
         };
-        
+
         // Click event
         li.addEventListener("click", handleAddToCart);
 
@@ -542,11 +578,12 @@ function displaySearchResults(products) {
             }
         });
 
-        
         ul.appendChild(li);
     });
     searchResultsDiv.appendChild(ul);
 }
+
+
 
 $(document).ready(function() {
     $(document).on('keydown', '#search-box', function(e) {
@@ -592,6 +629,7 @@ $(document).ready(function () {
             cart: cart.map((item) => ({
                 productId: item.productId,
                 quantity: item.quantity,
+                UnitId: item.selectedUnit ? item.selectedUnit.id : null,
                 variantId: item.variantId,
                 weight: item.weight,
                 productPrice: item.productPrice,

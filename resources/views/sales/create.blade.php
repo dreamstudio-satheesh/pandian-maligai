@@ -83,14 +83,15 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Product Name</th>
-                                                        <th>Weight</th>
+                                                        <th>Quantity</th>
                                                         <th>Unit Price</th>
+                                                        <th>Unit </th>
                                                        {{--  <th>Quantity</th> --}}
                                                         @if ($moduleStatuses['stocks'])
                                                             <th>Stock</th>
                                                         @endif
                                                         <th>Subtotal</th>
-                                                        <th>Action</th>
+                                                        <th>:::</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>

@@ -97,10 +97,11 @@ trait HandlesSalesOperations
                 SalesItem::create([
                     'sale_id' => $sale->id,
                     'product_id' => $item['productId'],
+                    'unit_id' => $item['UnitId'],
                     'quantity' => $item['quantity'],
                     'price' => $item['productPrice'],
                     'weight' => $item['weight'],
-                    'variant_id' => $item['variantId'],
+                    'variant_id' => null,
                     'subtotal' => $subtotal,
                 ]);
 
@@ -108,7 +109,7 @@ trait HandlesSalesOperations
                 if ($this->checkModuleStatus('stocks')) {
                     Stock::create([
                         'product_id' => $item['productId'],
-                        'variant_id' => $item['variantId'],
+                        'variant_id' => null,
                         'warehouse_id' => $request->input('warehouse_id', 1),
                         'date' => now(),
                         'quantity' => -$item['quantity'],
@@ -121,7 +122,7 @@ trait HandlesSalesOperations
 
                     Transaction::create([
                         'product_id' => $item['productId'],
-                        'variant_id' => $item['variantId'],
+                        'variant_id' => null,
                         'warehouse_id' => $request->input('warehouse_id', 1),
                         'type' => 'sale',
                         'quantity' => $item['quantity'],
@@ -219,7 +220,8 @@ trait HandlesSalesOperations
                     'product_id' => $item['productId'],
                     'quantity' => $item['quantity'],
                     'price' => $item['productPrice'],
-                    'variant_id' => $item['variantId'],
+                    'unit_id' => $item['UnitId'],
+                    'variant_id' => null,
                     'subtotal' => $subtotal,
                     // Include variant_id and other fields as necessary...
                 ]);

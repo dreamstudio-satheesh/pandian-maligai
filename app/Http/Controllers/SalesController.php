@@ -111,46 +111,33 @@ class SalesController extends Controller
         $query = $request->input('query');
         $warehouse_id = $request->input('warehouse_id', 1);
 
-        $products = Product::with(['variants'])
-            ->where('name', 'like', '%' . $query . '%')
+        // Eager load the baseUnit and subUnits relationships
+        $products = Product::where('name', 'like', '%' . $query . '%')
             ->orWhere('sku', 'like', $query . '%')
+            ->with(['baseUnit', 'subUnits'])
             ->get();
 
         $transformedProducts = collect();
         foreach ($products as $product) {
-            if ($product->product_type === 'variable' && $product->variants->isNotEmpty()) {
-                foreach ($product->variants as $variant) {
-                    $variantProduct = clone $product; // Clone the product to retain base properties
-
-                    // Update product name and price based on variant
-                    $variantProduct->name = "{$product->name} - {$variant->name}";
-                    if (session('customer_type') == 'wholesale') {
-                        $variantProduct->price = $variant->cost; // Set the price to cost if wholesale
-                    }else{
-                        $variantProduct->price = $variant->price;
-                    }
-                   
-
-                    // Add variant_id and remove variants array
-                    $variantProduct->variant_id = $variant->id;
-                    unset($variantProduct->variants); // Remove the variants array
-
-                    // Add variant info and current stock
-                    $variantProduct->variant_info = $variant;
-                    $variantProduct->current_stock = $this->calculateCurrentStock($product->id, $variant->id, $warehouse_id);
-
-                    $transformedProducts->push($variantProduct);
-                }
-            } else {
-                // Set variant_id to null for non-variable products
-                $product->variant_id = null;
-                if (session('customer_type') == 'wholesale') {
-                    $product->price = $product->cost; // Set the price to cost if wholesale
-                }
-                $product->current_stock = $this->calculateCurrentStock($product->id, null, $warehouse_id);
-                $transformedProducts->push($product); // Push the product itself if it's not a variant type
+            if (session('customer_type') == 'wholesale') {
+                $product->price = $product->cost; // Set the price to cost if wholesale
             }
-            // Append the current_stock to each product
+            $product->current_stock = $this->calculateCurrentStock($product->id, null, $warehouse_id);
+
+            // Collect all units (base unit and sub-units)
+            $allUnits = collect([$product->baseUnit])->merge($product->subUnits);
+
+            // Transform the product to include all details and units information
+            $transformedProduct = [
+                'id' => $product->id,
+                'name' => $product->name,
+                'sku' => $product->sku,
+                'price' => $product->price,
+                'current_stock' => $product->current_stock,
+                'units' => $allUnits,
+            ];
+
+            $transformedProducts->push($transformedProduct);
         }
 
         return response()->json($transformedProducts);

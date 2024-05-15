@@ -101,7 +101,7 @@ class PosController extends Controller
    
     public function viewpos($id)
     {
-         $invoice = Sale::with(['items.product', 'items.variant'])->withTrashed()->findOrFail($id);
+         $invoice = Sale::with(['items.product', 'items.unit'])->withTrashed()->findOrFail($id);
         $subtotal = $invoice->items->sum('subtotal');
 
         $discount = 0;

@@ -31,7 +31,7 @@ class AddProduct extends Component
         $taxMethod = 'exclusive',
         $image,
         $details;
-    public $productType;
+    public $productType='standard';
     public $productCost,
         $productPrice,
         $unit_id,

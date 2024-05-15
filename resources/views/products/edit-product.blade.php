@@ -131,13 +131,13 @@
                             </div> --}}
 
                             <!-- Image Upload -->
-                            <div class="form-group col-md-4">
+                          {{--   <div class="form-group col-md-4">
                                 <label>Image*</label>
                                 <input type="file" wire:model="image" class="form-control">
                                 @error('image')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             <!-- Details -->
                             <div class="form-group col-md-4">
@@ -161,8 +161,8 @@
                                     <select wire:model.change="productType" class="form-control">
                                         <option value="">Select Product Type</option>
                                         <option value="standard">Standard Product</option>
-                                        <option value="variable">Variable Product</option>
-                                        <option value="services">Services Product</option>
+                                     {{--    <option value="variable">Variable Product</option>
+                                        <option value="services">Services Product</option> --}}
                                     </select>
                                     @error('productType')
                                         <span class="text-danger">{{ $message }}</span>
@@ -215,7 +215,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                 {{--    <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Unit Sale</label>
                                             <select wire:model="unit_sale_id" class="form-control">
@@ -240,7 +240,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 @endif
 
                                 <div class="col-md-4">
