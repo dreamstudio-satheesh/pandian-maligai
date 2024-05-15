@@ -41,14 +41,19 @@
                     <div class="text-list-desc">{{ \Carbon\Carbon::parse($invoice->date)->format('h:i A') }}</div>
                 </li>
                 <li>
-                    <div class="text-list-title">Branch:</div>
-                    <div class="text-list-desc">{{ $invoice->warehouse->name }} </div>
+                    <div class="text-list-title">Toatal Items:</div>
+                    <div class="text-list-desc">{{ $invoice->items->count() }}</div>
                 </li>
                 <li class="text-right">
                     <div class="text-list-title">Invoice:</div>
                     <div class="text-list-desc">#{{ $invoice->invoice_number }}</div>
                 </li>
-               
+                <li>
+                    <div class="text-list-title"> Customer : </div>
+                </li>
+                <li class="text-right">
+                    <div class="text-list-desc"> {{ $invoice->customer->name }}</div>
+                </li>
             </ul>
             <table class="receipt-table">
                 <thead>
@@ -96,10 +101,7 @@
                 </div> --}}
                 <div class="text-receipt-seperator"></div>
                 <div class="text-bill-list-in">
-                    
-                    <div class="text-list-title">Total Items: {{ $invoice->items->count() }}  &nbsp;</div>
-                  
-                    <div class="text-bill-title"> Total :</div>
+                    <div class="text-bill-title">Total Bill:</div>
                     <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $invoice->grand_total }}
                     </div>
                 </div>
