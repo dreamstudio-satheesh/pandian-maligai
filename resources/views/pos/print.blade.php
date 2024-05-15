@@ -41,7 +41,7 @@
                     <div class="text-list-desc">{{ \Carbon\Carbon::parse($invoice->date)->format('h:i A') }}</div>
                 </li>
                 <li>
-                    <div class="text-list-title">Toatal Items:</div>
+                    <div class="text-list-title">Total Items:</div>
                     <div class="text-list-desc">{{ $invoice->items->count() }}</div>
                 </li>
                 <li class="text-right">
