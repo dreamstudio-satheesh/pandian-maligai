@@ -48,10 +48,7 @@
                     <div class="text-list-title">Invoice:</div>
                     <div class="text-list-desc">#{{ $invoice->invoice_number }}</div>
                 </li>
-                <li>
-                    <div class="text-list-title">Total Items:</div>
-                    <div class="text-list-desc">{{ $invoice->items->count() }}</div>
-                </li>
+               
             </ul>
             <table class="receipt-table">
                 <thead>
@@ -99,6 +96,9 @@
                 </div> --}}
                 <div class="text-receipt-seperator"></div>
                 <div class="text-bill-list-in">
+                    
+                        <div class="text-list-title">Total Items: {{ $invoice->items->count() }}  &nbsp; &nbsp; &nbsp;</div>
+                  
                     <div class="text-bill-title">Total Bill:</div>
                     <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $invoice->grand_total }}
                     </div>
