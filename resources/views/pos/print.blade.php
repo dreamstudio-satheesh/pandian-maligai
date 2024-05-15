@@ -62,7 +62,7 @@
                     @foreach ($invoice->items as $item)
                         <tr class="text-receipt-seperator">
                             <td>{{ $item->product->price }}</td>
-                            <td style="font-size: small;">{{ $item->product->name_ta }}</td>
+                            <td style="font-size: small;">{{ $item->quantity }} {{ $item->product->name_ta }}</td>
                             <td style="font-size: small;">
                                 @if($item->unit)
                                     {{ $item->unit->short_name }}
