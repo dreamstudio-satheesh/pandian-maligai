@@ -99,7 +99,7 @@
                     
                     <div class="text-list-title">Total Items: {{ $invoice->items->count() }}  &nbsp;</div>
                   
-                    <div class="text-bill-title"> Bill :</div>
+                    <div class="text-bill-title"> Total :</div>
                     <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $invoice->grand_total }}
                     </div>
                 </div>
