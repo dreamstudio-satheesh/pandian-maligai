@@ -382,7 +382,6 @@ function updateCartTable() {
         priceCell.appendChild(priceInput);
         row.appendChild(priceCell);
 
-       
         // Units Dropdown
         const unitSelect = document.createElement("select");
         unitSelect.classList.add("form-control", "input-sm");
@@ -407,21 +406,21 @@ function updateCartTable() {
 
         // Add event listener for change
         unitSelect.addEventListener("change", (event) => {
+            const selectedUnitId = event.target.value;
             if (Array.isArray(item.units)) {
-                item.selectedUnit = item.units.find(
-                    (unit) => unit.id == event.target.value
-                );
+                item.selectedUnit = item.units.find((unit) => unit.id == selectedUnitId);
             } else {
                 item.selectedUnit = null; // or handle appropriately
             }
-            updateCartTable();
+            
+            // Recalculate the weight and update the subtotal
+            updateWeight(item.productIdentifier, item.weight, item, weightInput);
         });
 
         // Append the select element to the cell and the row
         const unitCell = document.createElement("td");
         unitCell.appendChild(unitSelect);
         row.appendChild(unitCell);
-
 
         // Stock Cell (only if stocksModuleEnabled is true)
         if (stocksModuleEnabled) {
@@ -466,6 +465,8 @@ function updateCartTable() {
 
 
 
+
+
 // Call this function on page load to show the current cart
 document.addEventListener("DOMContentLoaded", function () {
     updateCartTable();
@@ -482,6 +483,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document
         .getElementById("shippingAmount")
         ?.addEventListener("input", updateGrandTotal);
+
+
+
+
 });
 
 
