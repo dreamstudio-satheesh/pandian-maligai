@@ -48,6 +48,10 @@
                     <div class="text-list-title">Invoice:</div>
                     <div class="text-list-desc">#{{ $invoice->invoice_number }}</div>
                 </li>
+                <li>
+                    <div class="text-list-title">Total Items:</div>
+                    <div class="text-list-desc">{{ $invoice->items->count() }}</div>
+                </li>
             </ul>
             <table class="receipt-table">
                 <thead>
