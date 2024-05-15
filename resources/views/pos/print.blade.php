@@ -28,6 +28,7 @@
                     Email: {{ config('settings.company_email') }}
                 @endif
             </div>
+            <div> Customer name :  {{ $invoice->customer->name }}</div>
         </div>
         <div class="receipt-body">
             <div class="receipt-heading"><span>cash memo</span></div>
@@ -41,19 +42,14 @@
                     <div class="text-list-desc">{{ \Carbon\Carbon::parse($invoice->date)->format('h:i A') }}</div>
                 </li>
                 <li>
-                    <div class="text-list-title">Total Items:</div>
-                    <div class="text-list-desc">{{ $invoice->items->count() }}</div>
+                    <div class="text-list-title">Branch:</div>
+                    <div class="text-list-desc">{{ $invoice->warehouse->name }} </div>
                 </li>
                 <li class="text-right">
                     <div class="text-list-title">Invoice:</div>
                     <div class="text-list-desc">#{{ $invoice->invoice_number }}</div>
                 </li>
-                <li>
-                    <div class="text-list-title"> Customer : </div>
-                </li>
-                <li class="text-right">
-                    <div class="text-list-desc"> {{ $invoice->customer->name }}</div>
-                </li>
+               
             </ul>
             <table class="receipt-table">
                 <thead>
@@ -101,8 +97,9 @@
                 </div> --}}
                 <div class="text-receipt-seperator"></div>
                 <div class="text-bill-list-in">
-                    <div class="text-bill-title">Total Bill:</div>
-                    <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $invoice->grand_total }}
+                    <div class="text-bill-title">Total Items: {{ $invoice->items->count() }}</div>
+               
+                    <div class="text-bill-value"> Toatl: {{ config('settings.currency_symbol') }} {{ $invoice->grand_total }}
                     </div>
                 </div>
                {{--  <div class="text-bill-list-in">
