@@ -92,7 +92,6 @@ trait HandlesSalesOperations
 
             // Iterate over each cart item and create corresponding sales items
             foreach ($cartItems as $item) {
-                $subtotal = number_format($item['quantity'] * $item['productPrice'], 2, '.', '');
                 // Make sure to validate and sanitize $item details
                 SalesItem::create([
                     'sale_id' => $sale->id,
@@ -102,7 +101,7 @@ trait HandlesSalesOperations
                     'price' => $item['productPrice'],
                     'weight' => $item['weight'],
                     'variant_id' => null,
-                    'subtotal' => $subtotal,
+                    'subtotal' => $item['subtotal'],
                 ]);
 
                 // If stock handling is enabled, update stock and create transaction record

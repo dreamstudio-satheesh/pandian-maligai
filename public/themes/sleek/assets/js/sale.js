@@ -637,7 +637,9 @@ $(document).ready(function () {
                 UnitId: item.selectedUnit ? item.selectedUnit.id : null,
                 variantId: item.variantId,
                 weight: item.weight,
+                subtotal: item.subtotal,
                 productPrice: item.productPrice,
+
                 // ... add other product details as needed
             })),
             discount_type: $("#discountType").val(),
