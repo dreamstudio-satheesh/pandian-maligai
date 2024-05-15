@@ -132,14 +132,14 @@ function updateWeight(productIdentifier, newWeight, item, weightInput) {
             cart[itemIndex].selectedUnit = null; // or handle appropriately
         }
 
-        // Ensure originalPrice is set
-        const originalPrice = parseFloat(cart[itemIndex].originalPrice);
-        if (isNaN(originalPrice)) {
-            console.error("Invalid original price:", cart[itemIndex].originalPrice);
+        // Ensure productPrice is set
+        const productPrice = parseFloat(cart[itemIndex].productPrice);
+        if (isNaN(productPrice)) {
+            console.error("Invalid original price:", cart[itemIndex].productPrice);
             return;
         }
 
-        const newPrice = originalPrice * adjustedWeight; // New price for the weight
+        const newPrice = productPrice * adjustedWeight; // New price for the weight
 
         // Ensure newPrice is a number before updating
         if (!isNaN(newPrice)) {
