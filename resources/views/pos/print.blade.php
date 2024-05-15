@@ -97,9 +97,9 @@
                 <div class="text-receipt-seperator"></div>
                 <div class="text-bill-list-in">
                     
-                        <div class="text-list-title"> Items: {{ $invoice->items->count() }}  &nbsp; &nbsp; &nbsp;</div>
+                    <div class="text-list-title">Total Items: {{ $invoice->items->count() }}  &nbsp;</div>
                   
-                    <div class="text-bill-title"> Bill:</div>
+                    <div class="text-bill-title"> Bill Amount:</div>
                     <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $invoice->grand_total }}
                     </div>
                 </div>
