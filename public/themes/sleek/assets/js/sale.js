@@ -93,7 +93,7 @@ function updateWeight(productIdentifier, newWeight, item, weightInput) {
         newWeight = parseFloat(newWeight).toFixed(3);  // Format new weight
         newWeight = parseFloat(newWeight); // Ensure newWeight is a number
 
-        cart[itemIndex].quantity = newWeight;
+        cart[itemIndex].weight = newWeight;
 
         // Retrieve the unit details
         const unit = item.units ? item.units.find(u => u.id === item.selectedUnit?.id) : null;
