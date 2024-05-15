@@ -631,7 +631,7 @@ $(document).ready(function () {
             customer_id: $("#customerDropdown").val(),
             warehouse_id: $("#warehouseSelect").val(),
             sale_date: $('input[name="inv_datetime"]').val(),
-            cart: cart.map((item) => ({
+            cart: cart.reverse().map((item) => ({
                 productId: item.productId,
                 quantity: item.quantity,
                 UnitId: item.selectedUnit ? item.selectedUnit.id : null,
