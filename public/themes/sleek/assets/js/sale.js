@@ -90,8 +90,14 @@ function updateGrandTotal() {
 function updateWeight(productIdentifier, newWeight, item, weightInput) {
     const itemIndex = cart.findIndex(item => item.productIdentifier === productIdentifier);
     if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
-        newWeight = parseFloat(newWeight).toFixed(3);  // Format new weight
-        newWeight = parseFloat(newWeight); // Ensure newWeight is a number
+        newWeight = parseFloat(newWeight);  // Ensure newWeight is a number
+
+        // Check if the new weight is already a number with up to 3 decimal places
+        const roundedWeight = parseFloat(newWeight.toFixed(3));
+        if (newWeight !== roundedWeight) {
+            console.warn("New weight has more than 3 decimal places, rounding to 3 decimal places");
+            newWeight = roundedWeight;
+        }
 
         cart[itemIndex].weight = newWeight;
 
