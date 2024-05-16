@@ -83,9 +83,9 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Product Name</th>
+                                                        <th>Unit </th>
                                                         <th>Quantity</th>
                                                         <th>Unit Price</th>
-                                                        <th>Unit </th>
                                                        {{--  <th>Quantity</th> --}}
                                                         @if ($moduleStatuses['stocks'])
                                                             <th>Stock</th>

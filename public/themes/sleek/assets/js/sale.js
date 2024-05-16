@@ -350,38 +350,6 @@ function updateCartTable() {
         nameCell.textContent = item.productName;
         row.appendChild(nameCell);
 
-        // Weight Input
-        const weightInput = document.createElement("input");
-        weightInput.type = "text";
-        weightInput.classList.add("form-control", "input-sm", "weight-input");
-        weightInput.value = parseFloat(item.weight);
-        weightInput.addEventListener(
-            "input",
-            debounce((event) => {
-                updateWeight(item.productIdentifier, event.target.value, item, weightInput);
-            }, 500)
-        );
-
-        const weightCell = document.createElement("td");
-        weightCell.appendChild(weightInput);
-        row.appendChild(weightCell);
-
-        // Price Input
-        const priceInput = document.createElement("input");
-        priceInput.type = "text";
-        priceInput.classList.add("form-control", "input-sm", "price-input");
-        priceInput.value = item.productPrice;
-        priceInput.addEventListener(
-            "input",
-            debounce((event) => {
-                updatePrice(item.productIdentifier, event.target.value);
-            })
-        );
-
-        const priceCell = document.createElement("td");
-        priceCell.appendChild(priceInput);
-        row.appendChild(priceCell);
-
         // Units Dropdown
         const unitSelect = document.createElement("select");
         unitSelect.classList.add("form-control", "input-sm");
@@ -421,6 +389,40 @@ function updateCartTable() {
         const unitCell = document.createElement("td");
         unitCell.appendChild(unitSelect);
         row.appendChild(unitCell);
+
+        // Weight Input
+        const weightInput = document.createElement("input");
+        weightInput.type = "text";
+        weightInput.classList.add("form-control", "input-sm", "weight-input");
+        weightInput.value = parseFloat(item.weight);
+        weightInput.addEventListener(
+            "input",
+            debounce((event) => {
+                updateWeight(item.productIdentifier, event.target.value, item, weightInput);
+            }, 500)
+        );
+
+        const weightCell = document.createElement("td");
+        weightCell.appendChild(weightInput);
+        row.appendChild(weightCell);
+
+        // Price Input
+        const priceInput = document.createElement("input");
+        priceInput.type = "text";
+        priceInput.classList.add("form-control", "input-sm", "price-input");
+        priceInput.value = item.productPrice;
+        priceInput.addEventListener(
+            "input",
+            debounce((event) => {
+                updatePrice(item.productIdentifier, event.target.value);
+            })
+        );
+
+        const priceCell = document.createElement("td");
+        priceCell.appendChild(priceInput);
+        row.appendChild(priceCell);
+
+        
 
         // Stock Cell (only if stocksModuleEnabled is true)
         if (stocksModuleEnabled) {
