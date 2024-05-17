@@ -70,11 +70,14 @@
                                     // Assume $item->weight holds the weight value
                                     $weight = $item->weight;
 
-                                    // Convert the weight to a float to remove trailing zeros
+                                    // Convert the weight to a float to handle decimal places correctly
                                     $formattedWeight = floatval($weight);
 
-                                    // Use number_format to ensure proper decimal places
-                                    $formattedWeight = number_format($formattedWeight, (floor($formattedWeight) != $formattedWeight ? 2 : 0), '.', '');
+                                    // Determine the number of decimal places to display
+                                    $decimalPlaces = (floor($formattedWeight) != $formattedWeight) ? 2 : 1;
+
+                                    // Use number_format to format the weight correctly
+                                    $formattedWeight = number_format($formattedWeight, $decimalPlaces, '.', '');
 
                                    
                                     ?>
