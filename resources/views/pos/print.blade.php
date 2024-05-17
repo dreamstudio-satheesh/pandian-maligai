@@ -73,12 +73,15 @@
                                     // Convert the weight to a float to handle decimal places correctly
                                     $formattedWeight = floatval($weight);
 
-                                    // Determine the number of decimal places to display
-                                    $decimalPlaces = (floor($formattedWeight) != $formattedWeight) ? 2 : 1;
+                                    // Convert back to string and remove unnecessary trailing zeros
+                                    $formattedWeight = rtrim(rtrim(sprintf('%f', $formattedWeight), '0'), '.');
 
-                                    // Use number_format to format the weight correctly
-                                    $formattedWeight = number_format($formattedWeight, $decimalPlaces, '.', '');
-
+                                    // Check if the weight has a decimal part
+                                    if (strpos($formattedWeight, '.') !== false) {
+                                        // Ensure the decimal part has at least one digit
+                                        $formattedWeight = number_format((float) $formattedWeight, 2);
+                                        $formattedWeight = rtrim(rtrim($formattedWeight, '0'), '.');
+                                    }
                                    
                                     ?>
                                     {{ $formattedWeight }} 
