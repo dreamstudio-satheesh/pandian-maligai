@@ -89,7 +89,7 @@ function updateGrandTotal() {
 
 function updateWeight(productIdentifier, newWeight, item, weightInput) {
     const itemIndex = cart.findIndex(item => item.productIdentifier === productIdentifier);
-    if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
+   if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
         newWeight = parseFloat(newWeight);  // Ensure newWeight is a number
 
         // Check if the new weight is already a number with up to 3 decimal places

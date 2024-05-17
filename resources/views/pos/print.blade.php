@@ -65,7 +65,20 @@
                         <tr class="text-receipt-seperator">
                             <td>{{ $item->product->price }}</td>
                             <td style="font-size: small;"> {{ $item->product->name_ta }}</td>
-                            <td style="font-size: small;"> {{ $item->weight }} 
+                            <td style="font-size: small;">
+                                <?php
+// Assume $item->weight holds the weight value
+$weight = $item->weight;
+
+// Convert the weight to a float to remove trailing zeros
+$formattedWeight = floatval($weight);
+
+// Use number_format to ensure proper decimal places
+$formattedWeight = number_format($formattedWeight, (floor($formattedWeight) != $formattedWeight ? 2 : 0), '.', '');
+
+echo $formattedWeight;
+?>
+ {{ $formattedWeight }} 
                                 @if($item->unit)
                                     {{ $item->unit->short_name }}
                                 @else
