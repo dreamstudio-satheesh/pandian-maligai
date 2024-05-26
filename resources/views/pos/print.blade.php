@@ -63,7 +63,7 @@
                 <tbody>
                     @foreach ($invoice->items as $item)
                         <tr class="text-receipt-seperator">
-                            <td>{{ $item->product->price }}</td>
+                            <td>{{ number_format($item->product->price, 2) }}</td>
                             <td style="font-size: small;"> {{ $item->product->name_ta }}</td>
                             <td style="font-size: small;">
                                 <?php
@@ -91,7 +91,7 @@
                                     N/A
                                 @endif
                             </td>
-                            <td>{{ $item->subtotal }}</td>
+                            <td>{{ number_format($item->subtotal, 2) }}</td>
                            
                         </tr>
                     @endforeach
@@ -101,7 +101,7 @@
             <div class="text-bill-list mb-15">
                 <div class="text-bill-list-in">
                     <div class="text-bill-title">Sub-Total:</div>
-                    <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ $subtotal }}</div>
+                    <div class="text-bill-value">{{ config('settings.currency_symbol') }} {{ number_format($subtotal, 2) }}</div>
                 </div>
                 <div class="text-bill-list-in">
                     <div class="text-bill-title">Discount: </div>
@@ -118,7 +118,7 @@
                 <div class="text-bill-list-in">
                     <div class="text-bill-title">Total Items: {{ $invoice->items->count() }}</div>
                
-                    <div class="text-bill-value"> Toatl: {{ config('settings.currency_symbol') }} {{ $invoice->grand_total }}
+                    <div class="text-bill-value"> Toatl: {{ config('settings.currency_symbol') }} {{ number_format$(invoice->grand_total,2) }}
                     </div>
                 </div>
                {{--  <div class="text-bill-list-in">
