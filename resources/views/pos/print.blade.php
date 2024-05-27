@@ -118,7 +118,7 @@
                 <div class="text-bill-list-in">
                     <div class="text-bill-title">Total Items: {{ $invoice->items->count() }}</div>
                
-                    <div class="text-bill-value"> Toatl: {{ config('settings.currency_symbol') }} {{ number_format$(invoice->grand_total,2) }}
+                    <div class="text-bill-value"> Toatl: {{ config('settings.currency_symbol') }} {{ number_format($invoice->grand_total,2) }}
                     </div>
                 </div>
                {{--  <div class="text-bill-list-in">
