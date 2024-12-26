@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\{PosController, HomeController, UnitController, UserController, BrandController, SalesController, StockController, ReportController, AccountController, DepositController, ExpenseController, PaymentController, ProductController, SettingController, CategoryController, CurrencyController, CustomerController, PurchaseController, SupplierController, WarehouseController, PaymentMethodController, DepositCategoryController, ExpenseCategoryController};
