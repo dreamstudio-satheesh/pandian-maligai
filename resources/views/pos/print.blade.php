@@ -18,6 +18,8 @@
 <body class="section-bg-one">
 
     <main class="container receipt-wrapper" id="download-section">
+        <div class="receipt-heading">  <span>உ</span></div>
+       
         <div class="receipt-top">
             <div class="company-name">{{ config('settings.company_name') }}</div>
             <div class="company-address">{{ config('settings.company_address') }}</div>
