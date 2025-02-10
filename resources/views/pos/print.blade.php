@@ -25,7 +25,7 @@
             <div class="company-address">{{ config('settings.company_address') }}</div>
             <div class="company-mobile">
                 @if (trim(config('settings.company_phone')) !== '')
-                Phone: {{ config('settings.company_phone') }}
+                 {{ config('settings.company_phone') }}
                 @elseif (trim(config('settings.company_email')) !== '')
                 Email: {{ config('settings.company_email') }}
                 @endif
