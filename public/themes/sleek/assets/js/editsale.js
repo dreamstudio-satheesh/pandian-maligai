@@ -463,7 +463,10 @@ $(document).ready(function () {
             cart: cart.map((item) => ({
                 productId: item.productId,
                 quantity: item.quantity,
+                UnitId: item.selectedUnit ? item.selectedUnit.id : null, // Add this line
                 variantId: item.variantId,
+                // weight: item.weight,       
+                // subtotal: item.subtotal,     
                 productPrice: item.productPrice,
                 // ... add other product details as needed
             })),
