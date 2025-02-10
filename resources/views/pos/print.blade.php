@@ -30,6 +30,9 @@
                 Email: {{ config('settings.company_email') }}
                 @endif
             </div>
+             <!-- Added static details using the existing style -->
+             <div class="company-mobile">FSSI: 12424006000551</div>
+             <div class="company-mobile">GST NO: 33ABGFP7937E1Z4</div>
             <div> Customer name : {{ $invoice->customer->name }}</div>
         </div>
         <div class="receipt-body">
