@@ -74,6 +74,85 @@ function updateGrandTotal() {
         grandTotalElement.textContent = `₹ ${(+grandTotal).toFixed(2)}`;
 }
 
+function updateWeight(productIdentifier, newWeight, item, weightInput) {
+    const itemIndex = cart.findIndex(item => item.productIdentifier === productIdentifier);
+   if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
+        newWeight = parseFloat(newWeight);  // Ensure newWeight is a number
+
+        // Check if the new weight is already a number with up to 3 decimal places
+        const roundedWeight = parseFloat(newWeight.toFixed(3));
+        if (newWeight !== roundedWeight) {
+            console.warn("New weight has more than 3 decimal places, rounding to 3 decimal places");
+            newWeight = roundedWeight;
+        }
+
+        cart[itemIndex].weight = newWeight;
+
+        // Retrieve the unit details
+        const unit = item.units ? item.units.find(u => u.id === item.selectedUnit?.id) : null;
+
+        let adjustedWeight = newWeight;
+        if (unit) {
+            const operatorValue = parseFloat(unit.operator_value);
+            if (isNaN(operatorValue)) {
+                console.error("Invalid operator value:", unit.operator_value);
+                return;
+            }
+
+            // Apply the operator and operator_value to the new weight
+            switch (unit.operator) {
+                case '*':
+                    adjustedWeight = newWeight * operatorValue;
+                    break;
+                case '/':
+                    adjustedWeight = newWeight / operatorValue;
+                    break;
+                case '+':
+                    adjustedWeight = newWeight + operatorValue;
+                    break;
+                case '-':
+                    adjustedWeight = newWeight - operatorValue;
+                    break;
+                default:
+                    console.error("Unsupported operator:", unit.operator);
+                    return;
+            }
+
+            // Update the selected unit in the cart item
+            cart[itemIndex].selectedUnit = unit;
+        } else {
+            console.warn("Unit not found, defaulting to new weight calculation");
+            cart[itemIndex].selectedUnit = null; // or handle appropriately
+        }
+
+        // Ensure productPrice is set
+        const productPrice = parseFloat(cart[itemIndex].productPrice);
+        if (isNaN(productPrice)) {
+            console.error("Invalid original price:", cart[itemIndex].productPrice);
+            return;
+        }
+
+        const newPrice = productPrice * adjustedWeight; // New price for the weight
+
+        // Ensure newPrice is a number before updating
+        if (!isNaN(newPrice)) {
+            // Update the subtotal for this item
+            cart[itemIndex].subtotal = (cart[itemIndex].quantity * newPrice).toFixed(2);
+
+            // Update the weight input in case it wasn't formatted on input
+            weightInput.value = newWeight;
+
+            // Update the cart table, which should recalculate the grand total
+            updateCartTable();
+        } else {
+            console.error("Calculation error: newPrice is NaN");
+        }
+    } else {
+        console.error("Invalid weight or item not found");
+    }
+}
+
+
 function updatePrice(productIdentifier, newPrice) {
     newPrice = parseFloat(newPrice);
     const productIndex = cart.findIndex(
@@ -255,12 +334,49 @@ function updateCartTable() {
     cart.forEach((item) => {
         const row = document.createElement("tr");
 
-        // Product Name
-        const nameCell = document.createElement("td");
-        nameCell.textContent = item.productName;
-        row.appendChild(nameCell);
+            // Product Name
+            const nameCell = document.createElement("td");
+            nameCell.textContent = item.productName;
+            row.appendChild(nameCell);
 
-        // Price Input
+            // Units Dropdown
+            const unitSelect = document.createElement("select");
+            unitSelect.classList.add("form-control", "input-sm");
+
+            if (Array.isArray(item.units) && item.units.length > 0) {
+                item.units.forEach((unit) => {
+                    const option = document.createElement("option");
+                    option.value = unit.id;
+                    option.text = unit.short_name;
+                    if (unit.id === item.selectedUnit?.id) {
+                        option.selected = true;
+                    }
+                    unitSelect.appendChild(option);
+                });
+            } else {
+                // Handle no units
+                const option = document.createElement("option");
+                option.value = "";
+                option.text = "No units available";
+                unitSelect.appendChild(option);
+            }
+
+            unitSelect.addEventListener("change", (event) => {
+                const selectedUnitId = event.target.value;
+                if (Array.isArray(item.units)) {
+                    item.selectedUnit = item.units.find((unit) => unit.id == selectedUnitId);
+                }
+                
+
+                // Recalculate the weight and update the subtotal
+                updateWeight(item.productIdentifier, item.weight, item, weightInput);
+            });
+
+            const unitCell = document.createElement("td");
+            unitCell.appendChild(unitSelect);
+            row.appendChild(unitCell);
+
+            // Price Input
         const priceInput = document.createElement("input");
         priceInput.type = "text";
         priceInput.classList.add("form-control", "input-sm", "price-input");
@@ -276,47 +392,23 @@ function updateCartTable() {
         priceCell.appendChild(priceInput);
         row.appendChild(priceCell);
 
-        // Quantity Input with Debounce
-        const quantityInput = document.createElement("input");
-        quantityInput.type = "number";
-        quantityInput.classList.add("form-control", "input-sm");
-        quantityInput.value = item.quantity;
-        quantityInput.min = 1;
-        quantityInput.addEventListener(
-            "input",
-            debounce((event) => {
-                updateQuantity(item.productIdentifier, event.target.value);
-            })
-        );
+         // Weight Input
+         const weightInput = document.createElement("input");
+         weightInput.type = "text";
+         weightInput.classList.add("form-control", "input-sm", "weight-input");
+         weightInput.value = parseFloat(item.weight);
+         weightInput.addEventListener(
+             "input",
+             debounce((event) => {
+                 updateWeight(item.productIdentifier, event.target.value, item, weightInput);
+             }, 500)
+         );
+ 
+         const weightCell = document.createElement("td");
+         weightCell.appendChild(weightInput);
+         row.appendChild(weightCell);
 
-        const decrementButton = document.createElement("button");
-        decrementButton.innerHTML =
-            '<span class="mdi mdi-24px mdi-minus-circle-outline"></span>';
-        decrementButton.style.color = "#8a909d";
-        decrementButton.type = "button";
-        decrementButton.addEventListener("click", () => {
-            decrementQuantity(item.productIdentifier);
-        });
-
-        const incrementButton = document.createElement("button");
-        incrementButton.innerHTML =
-            '<span class="mdi mdi-24px mdi-plus-circle-outline"></span>';
-        incrementButton.style.color = "#8a909d";
-        incrementButton.type = "button";
-        incrementButton.addEventListener("click", () => {
-            incrementQuantity(item.productIdentifier);
-        });
-
-        const quantityInputGroup = document.createElement("div");
-        quantityInputGroup.classList.add("input-group");
-        quantityInputGroup.appendChild(decrementButton);
-        quantityInputGroup.appendChild(quantityInput);
-        quantityInputGroup.appendChild(incrementButton);
-
-        const quantityCell = document.createElement("td");
-        quantityCell.appendChild(quantityInputGroup);
-        row.appendChild(quantityCell);
-
+       
         // Stock Cell (only if stocksModuleEnabled is true)
         if (stocksModuleEnabled) {
             const stockCell = document.createElement("td");
@@ -324,18 +416,18 @@ function updateCartTable() {
             row.appendChild(stockCell);
         }
 
-        // Subtotal
-        const subtotalCell = document.createElement("td");
-        subtotalCell.textContent = item.subtotal;
-        row.appendChild(subtotalCell);
-
-        // Add subtotal to totalWithoutTaxAndShipping
-        const itemSubtotalNumber = parseFloat(item.subtotal);
-        if (!isNaN(itemSubtotalNumber)) {
-            totalWithoutTaxAndShipping += itemSubtotalNumber;
-        } else {
-            console.error('Invalid subtotal for item', item.productIdentifier, ':', item.subtotal);
-        }
+         // Subtotal
+         const subtotalCell = document.createElement("td");
+         subtotalCell.textContent = item.subtotal;
+         row.appendChild(subtotalCell);
+ 
+         // Add subtotal to totalWithoutTaxAndShipping
+         const itemSubtotalNumber = parseFloat(item.subtotal);
+         if (!isNaN(itemSubtotalNumber)) {
+             totalWithoutTaxAndShipping += itemSubtotalNumber;
+         } else {
+             console.error('Invalid subtotal for item', item.productIdentifier, ':', item.subtotal);
+         }
 
         // Remove Button
         const removeButton = document.createElement("button");
@@ -465,8 +557,8 @@ $(document).ready(function () {
                 quantity: item.quantity,
                 UnitId: item.selectedUnit ? item.selectedUnit.id : null, // Add this line
                 variantId: item.variantId,
-                // weight: item.weight,       
-                // subtotal: item.subtotal,     
+                weight: item.weight,       
+                subtotal: item.subtotal,     
                 productPrice: item.productPrice,
                 // ... add other product details as needed
             })),
@@ -477,9 +569,11 @@ $(document).ready(function () {
             shipping_amount: parseFloat($("#shippingAmount").val()) || 0,
             total_amount: parseFloat(grandTotal.toFixed(2)) || 0,
         };
-        
-      
 
+        
+        
+
+       
         // Post data to the server
           $.ajax({
             url: EditSaleUrl,

@@ -659,7 +659,6 @@ $(document).ready(function () {
         };
 
 
-
         // Post data to the server
         $.ajax({
             url: createSaleUrl,

@@ -162,15 +162,30 @@ class SalesController extends Controller
                 // Append variant info to product name if variant_id exists
                 $productName = $item->variant_id ? $item->product->name . ' - ' . $item->variant->name : $item->product->name;
 
+                // Load units: combine baseUnit and subUnits
+                $units = collect();
+                if ($item->product->baseUnit) {
+                    $units->push($item->product->baseUnit);
+                }
+                if ($item->product->subUnits) {
+                    $units = $units->merge($item->product->subUnits);
+                }
+
+                // Find the selected unit using the unit_id from the sale item
+                $selectedUnit = $units->firstWhere('id', $item->unit_id);
+
                 return [
                     'productId' => (string) $item->product_id,
                     'productIdentifier' => (string) $productIdentifier,
                     'productName' => $productName,
                     'productPrice' => (float) $item->price,
                     'quantity' => (int) $item->quantity,
+                    'weight' => (int) $item->weight,
                     'variantId' => $item->variant_id ? (string) $item->variant_id : null,
-                    'subtotal' => (float) ($item->quantity * $item->price),
+                    'subtotal' => (float) ($item->weight * $item->price),
                     'stock' => (float) $item->current_stock,
+                    'units'           => $units->toArray(),  // Pass available units
+                    'selectedUnit'    => $selectedUnit ? $selectedUnit->toArray() : null, // For pre-selection
                 ];
             })
             ->toJson();
