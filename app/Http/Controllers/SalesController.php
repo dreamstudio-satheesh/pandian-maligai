@@ -182,7 +182,6 @@ class SalesController extends Controller
                     'quantity' => (int) $item->quantity,
                     'weight' => (int) $item->weight,
                     'variantId' => $item->variant_id ? (string) $item->variant_id : null,
-                    'subtotal' => (float) ($item->weight * $item->price),
                     'stock' => (float) $item->current_stock,
                     'units'           => $units->toArray(),  // Pass available units
                     'selectedUnit'    => $selectedUnit ? $selectedUnit->toArray() : null, // For pre-selection

@@ -334,49 +334,68 @@ function updateCartTable() {
     cart.forEach((item) => {
         const row = document.createElement("tr");
 
-            // Product Name
-            const nameCell = document.createElement("td");
-            nameCell.textContent = item.productName;
-            row.appendChild(nameCell);
+        // Product Name
+        const nameCell = document.createElement("td");
+        nameCell.textContent = item.productName;
+        row.appendChild(nameCell);
 
-            // Units Dropdown
-            const unitSelect = document.createElement("select");
-            unitSelect.classList.add("form-control", "input-sm");
+        // Units Dropdown
+        const unitSelect = document.createElement("select");
+        unitSelect.classList.add("form-control", "input-sm");
 
-            if (Array.isArray(item.units) && item.units.length > 0) {
-                item.units.forEach((unit) => {
-                    const option = document.createElement("option");
-                    option.value = unit.id;
-                    option.text = unit.short_name;
-                    if (unit.id === item.selectedUnit?.id) {
-                        option.selected = true;
-                    }
-                    unitSelect.appendChild(option);
-                });
-            } else {
-                // Handle no units
+        if (Array.isArray(item.units) && item.units.length > 0) {
+            item.units.forEach((unit) => {
                 const option = document.createElement("option");
-                option.value = "";
-                option.text = "No units available";
-                unitSelect.appendChild(option);
-            }
-
-            unitSelect.addEventListener("change", (event) => {
-                const selectedUnitId = event.target.value;
-                if (Array.isArray(item.units)) {
-                    item.selectedUnit = item.units.find((unit) => unit.id == selectedUnitId);
+                option.value = unit.id;
+                option.text = unit.short_name;
+                if (unit.id === item.selectedUnit?.id) {
+                    option.selected = true;
                 }
-                
-
-                // Recalculate the weight and update the subtotal
-                updateWeight(item.productIdentifier, item.weight, item, weightInput);
+                unitSelect.appendChild(option);
             });
+        } else {
+            // Handle the case where there are no units available
+            const option = document.createElement("option");
+            option.value = "";
+            option.text = "No units available";
+            unitSelect.appendChild(option);
+        }
 
-            const unitCell = document.createElement("td");
-            unitCell.appendChild(unitSelect);
-            row.appendChild(unitCell);
+        // Add event listener for change
+        unitSelect.addEventListener("change", (event) => {
+            const selectedUnitId = event.target.value;
+            if (Array.isArray(item.units)) {
+                item.selectedUnit = item.units.find((unit) => unit.id == selectedUnitId);
+            } else {
+                item.selectedUnit = null; // or handle appropriately
+            }
+            
+            // Recalculate the weight and update the subtotal
+            updateWeight(item.productIdentifier, item.weight, item, weightInput);
+        });
 
-            // Price Input
+        // Append the select element to the cell and the row
+        const unitCell = document.createElement("td");
+        unitCell.appendChild(unitSelect);
+        row.appendChild(unitCell);
+
+        // Weight Input
+        const weightInput = document.createElement("input");
+        weightInput.type = "text";
+        weightInput.classList.add("form-control", "input-sm", "weight-input");
+        weightInput.value = parseFloat(item.weight);
+        weightInput.addEventListener(
+            "input",
+            debounce((event) => {
+                updateWeight(item.productIdentifier, event.target.value, item, weightInput);
+            }, 500)
+        );
+
+        const weightCell = document.createElement("td");
+        weightCell.appendChild(weightInput);
+        row.appendChild(weightCell);
+
+        // Price Input
         const priceInput = document.createElement("input");
         priceInput.type = "text";
         priceInput.classList.add("form-control", "input-sm", "price-input");
@@ -392,23 +411,8 @@ function updateCartTable() {
         priceCell.appendChild(priceInput);
         row.appendChild(priceCell);
 
-         // Weight Input
-         const weightInput = document.createElement("input");
-         weightInput.type = "text";
-         weightInput.classList.add("form-control", "input-sm", "weight-input");
-         weightInput.value = parseFloat(item.weight);
-         weightInput.addEventListener(
-             "input",
-             debounce((event) => {
-                 updateWeight(item.productIdentifier, event.target.value, item, weightInput);
-             }, 500)
-         );
- 
-         const weightCell = document.createElement("td");
-         weightCell.appendChild(weightInput);
-         row.appendChild(weightCell);
+        
 
-       
         // Stock Cell (only if stocksModuleEnabled is true)
         if (stocksModuleEnabled) {
             const stockCell = document.createElement("td");
@@ -416,23 +420,23 @@ function updateCartTable() {
             row.appendChild(stockCell);
         }
 
-         // Subtotal
-         const subtotalCell = document.createElement("td");
-         subtotalCell.textContent = item.subtotal;
-         row.appendChild(subtotalCell);
- 
-         // Add subtotal to totalWithoutTaxAndShipping
-         const itemSubtotalNumber = parseFloat(item.subtotal);
-         if (!isNaN(itemSubtotalNumber)) {
-             totalWithoutTaxAndShipping += itemSubtotalNumber;
-         } else {
-             console.error('Invalid subtotal for item', item.productIdentifier, ':', item.subtotal);
-         }
+        // Subtotal
+        const subtotalCell = document.createElement("td");
+        subtotalCell.textContent = item.subtotal;
+        row.appendChild(subtotalCell);
+
+        // Add subtotal to totalWithoutTaxAndShipping
+        const itemSubtotalNumber = parseFloat(item.subtotal);
+        if (!isNaN(itemSubtotalNumber)) {
+            totalWithoutTaxAndShipping += itemSubtotalNumber;
+        } else {
+            console.error('Invalid subtotal for item', item.productIdentifier, ':', item.subtotal);
+        }
 
         // Remove Button
         const removeButton = document.createElement("button");
         removeButton.classList.add("btn", "btn-sm", "btn-danger");
-        removeButton.textContent = "Remove";
+        removeButton.textContent = "X";
         removeButton.addEventListener("click", () => {
             removeFromCart(item.productIdentifier);
         });
@@ -451,6 +455,69 @@ function updateCartTable() {
 
 // Call this function on page load to show the current cart
 document.addEventListener("DOMContentLoaded", function () {
+
+    // Update each cart item's subtotal in the cart array
+    if (Array.isArray(cart)) {
+        cart.forEach((item, index) => {
+            // 1. Validate and process the weight
+            let weight = parseFloat(item.weight);
+            if (isNaN(weight) || weight <= 0) {
+                console.error("Invalid weight for item", item.productIdentifier);
+                return; // Skip updating this item if weight is invalid
+            }
+            // Round weight to 3 decimal places (like in updateWeight)
+            weight = parseFloat(weight.toFixed(3));
+
+            // 2. Determine the adjusted weight based on the selected unit
+            let adjustedWeight = weight;
+            if (item.units && Array.isArray(item.units) && item.selectedUnit) {
+                // Find the selected unit details
+                const unit = item.units.find(u => u.id == item.selectedUnit.id);
+                if (unit) {
+                    const operatorValue = parseFloat(unit.operator_value);
+                    if (isNaN(operatorValue)) {
+                        console.error("Invalid operator value for item", item.productIdentifier, ":", unit.operator_value);
+                    } else {
+                        switch (unit.operator) {
+                            case '*':
+                                adjustedWeight = weight * operatorValue;
+                                break;
+                            case '/':
+                                adjustedWeight = weight / operatorValue;
+                                break;
+                            case '+':
+                                adjustedWeight = weight + operatorValue;
+                                break;
+                            case '-':
+                                adjustedWeight = weight - operatorValue;
+                                break;
+                            default:
+                                console.error("Unsupported operator for item", item.productIdentifier, ":", unit.operator);
+                        }
+                    }
+                } else {
+                    console.warn("Selected unit not found for item", item.productIdentifier, "; using original weight.");
+                }
+            }
+
+            // 3. Parse productPrice and quantity
+            const productPrice = parseFloat(item.productPrice);
+            const quantity = parseInt(item.quantity, 10);
+            if (isNaN(productPrice) || isNaN(quantity) || quantity < 1) {
+                console.error("Invalid productPrice or quantity for item", item.productIdentifier);
+                return;
+            }
+
+            // 4. Calculate the new price (productPrice * adjustedWeight)
+            const newPrice = productPrice * adjustedWeight;
+            // 5. Update the item's subtotal in the cart array
+            cart[index].subtotal = (newPrice * quantity).toFixed(2);
+        });
+    } else {
+        console.warn("Cart is not an array.");
+    }
+
+
     // disable the warehouseSelect dropdown so can manage item stock
     if (warehousesModuleEnabled) {
         document.getElementById("warehouseSelect").disabled = true;
