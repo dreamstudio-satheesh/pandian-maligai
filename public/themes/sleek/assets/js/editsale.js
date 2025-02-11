@@ -45,9 +45,9 @@ function updateGrandTotal() {
     const shippingAmount = parseFloat(shippingAmountElement.value) || 0;
 
     const discount = calculateDiscount(discountType, discountAmount);
-     tax = calculateTax(taxRate);
+    tax = calculateTax(taxRate);
     // Calculate grandTotal
-     grandTotal =
+    grandTotal =
         totalWithoutTaxAndShipping - discount + tax + shippingAmount;
 
     // Update the display for discount, tax, and grand total
@@ -65,9 +65,8 @@ function updateGrandTotal() {
     }
 
     if (displayDiscountElement)
-        displayDiscountElement.textContent = `₹ ${(+discount).toFixed(2)} (${
-            discountType === "percent" ? discountAmount + "%" : "Fixed"
-        })`;
+        displayDiscountElement.textContent = `₹ ${(+discount).toFixed(2)} (${discountType === "percent" ? discountAmount + "%" : "Fixed"
+            })`;
     if (displayTaxElement)
         displayTaxElement.textContent = `₹ ${(+tax).toFixed(2)} (${taxRate}%)`;
     if (grandTotalElement)
@@ -76,7 +75,7 @@ function updateGrandTotal() {
 
 function updateWeight(productIdentifier, newWeight, item, weightInput) {
     const itemIndex = cart.findIndex(item => item.productIdentifier === productIdentifier);
-   if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
+    if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
         newWeight = parseFloat(newWeight);  // Ensure newWeight is a number
 
         // Check if the new weight is already a number with up to 3 decimal places
@@ -257,56 +256,57 @@ function debounce(func, timeout = 1200) {
 }
 
 function addToCart(product) {
-    const productIdentifier = product.variant_id
-        ? `${product.id}-${product.variant_id}`
-        : `${product.id}`;
+    // Create a unique identifier that considers the product ID
+    const productIdentifier = `${product.id}`;
+
     const existingProductIndex = cart.findIndex(
         (item) => item.productIdentifier === productIdentifier
     );
 
+    if (warehousesModuleEnabled) {
+        // Disable the warehouseSelect dropdown so can manage item stock
+        document.getElementById('warehouseSelect').disabled = true;
+    }
+
+    document.getElementById('search-box').value = '';
+
     // If the stocks module is enabled and the stock is less than one, display an error message.
     if (stocksModuleEnabled && (product.stock < 1 || product.stock === null)) {
-        toastr.error(
-            "Cannot add to cart, product is out of stock or stock data is unavailable."
-        );
+        toastr.error("Cannot add to cart, product is out of stock or stock data is unavailable.");
         return;
     }
 
     if (existingProductIndex !== -1) {
         // Product exists, increase quantity if stock permits or if stock module is not enabled
         const potentialNewQuantity = cart[existingProductIndex].quantity + 1;
-        if (
-            !stocksModuleEnabled ||
-            (stocksModuleEnabled && product.stock >= potentialNewQuantity)
-        ) {
+        if (!stocksModuleEnabled || (stocksModuleEnabled && product.stock >= potentialNewQuantity)) {
             cart[existingProductIndex].quantity = potentialNewQuantity;
-            cart[existingProductIndex].subtotal = (
-                cart[existingProductIndex].quantity *
-                cart[existingProductIndex].productPrice
-            ).toFixed(2);
+            cart[existingProductIndex].subtotal = cart[existingProductIndex].quantity * cart[existingProductIndex].productPrice;
         } else {
             toastr.error("Cannot add more. Not enough stock.");
             return;
         }
     } else {
+
+        // console.log(product);
         // New product, add to cart if stock permits or if stock module is not enabled
-        if (
-            !stocksModuleEnabled ||
-            (stocksModuleEnabled && product.stock >= 1)
-        ) {
+        if (!stocksModuleEnabled || (stocksModuleEnabled && product.stock >= 1)) {
             const newCartItem = {
                 productId: product.id,
                 productIdentifier: productIdentifier,
                 productName: product.name,
                 productPrice: parseFloat(product.price),
+                originalPrice: parseFloat(product.price),
+                weight: 1,
                 quantity: 1,
                 subtotal: parseFloat(product.price),
                 stock: stocksModuleEnabled ? parseInt(product.stock, 10) : null,
-                variantId: product.variant_id,
+                units: product.units,  // Add units to the cart item
+                selectedUnit: product.units && product.units[0] ? product.units[0] : null  // Handle undefined units
             };
-            cart.push(newCartItem);
+            cart.unshift(newCartItem);
         } else {
-            toastr.error("Cannot add to cart, product is out of stock !");
+            toastr.error("Cannot add to cart, product is out of stock!");
             return;
         }
     }
@@ -369,7 +369,7 @@ function updateCartTable() {
             } else {
                 item.selectedUnit = null; // or handle appropriately
             }
-            
+
             // Recalculate the weight and update the subtotal
             updateWeight(item.productIdentifier, item.weight, item, weightInput);
         });
@@ -379,7 +379,7 @@ function updateCartTable() {
         unitCell.appendChild(unitSelect);
         row.appendChild(unitCell);
 
-        
+
         // Price Input
         const priceInput = document.createElement("input");
         priceInput.type = "text";
@@ -413,7 +413,7 @@ function updateCartTable() {
         row.appendChild(weightCell);
 
 
-        
+
 
         // Stock Cell (only if stocksModuleEnabled is true)
         if (stocksModuleEnabled) {
@@ -554,7 +554,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-      
+
         let url = `/search-products?query=${query}`;
 
         if (stocksModuleEnabled && warehouseId) {
@@ -569,48 +569,62 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch((error) => console.error("Error:", error));
     });
 
-    function displaySearchResults(products) {
-        document.getElementById('search-box').value = '';
-
-        const searchResultsDiv = document.getElementById("searchResults");
-        searchResultsDiv.innerHTML = "";
-        const ul = document.createElement("ul");
-        ul.classList.add("list-group");
-
-        products.forEach((product) => {
-            const li = document.createElement("li");
-            li.classList.add("list-group-item");
-            let productText = product.name + " - " + product.price;
-            if (stocksModuleEnabled && product.current_stock !== undefined) {
-                productText += " - Stock: " + product.current_stock;
-            }
-            li.textContent = productText;
-            li.setAttribute("data-product-id", product.id);
-            li.setAttribute("data-product-name", product.name);
-            li.setAttribute("data-product-price", product.price);
-            li.setAttribute("data-variant-id", product.variant_id || "");
-            if (stocksModuleEnabled) {
-                li.setAttribute("data-product-stock", product.current_stock);
-            }
-            li.addEventListener("click", function () {
-                const productToAdd = {
-                    id: li.getAttribute("data-product-id"),
-                    name: li.getAttribute("data-product-name"),
-                    price: li.getAttribute("data-product-price"),
-                    variant_id: li.getAttribute("data-variant-id"),
-                    stock: stocksModuleEnabled
-                        ? li.getAttribute("data-product-stock")
-                        : null,
-                };
-
-                addToCart(productToAdd);
-                searchResultsDiv.innerHTML = "";
-            });
-            ul.appendChild(li);
-        });
-        searchResultsDiv.appendChild(ul);
-    }
+ 
 });
+
+
+function displaySearchResults(products) {
+    const searchResultsDiv = document.getElementById("searchResults");
+    searchResultsDiv.innerHTML = "";
+    const ul = document.createElement("ul");
+    ul.classList.add("list-group");
+
+    products.forEach((product) => {
+        const li = document.createElement("li");
+        li.classList.add("list-group-item");
+        let productText = product.name + " - ₹ " + product.price;
+        if (stocksModuleEnabled && product.current_stock !== undefined) {
+            productText += " - Stock: " + product.current_stock;
+        }
+        li.textContent = productText;
+        li.setAttribute("data-product-id", product.id);
+        li.setAttribute("data-product-name", product.name);
+        li.setAttribute("data-product-price", product.price);
+        // Enable tab index for each list item
+        li.setAttribute("tabIndex", 1);
+
+        if (stocksModuleEnabled) {
+            li.setAttribute("data-product-stock", product.current_stock);
+        }
+
+        // Event handler to add product to cart
+        const handleAddToCart = () => {
+            const productToAdd = {
+                id: li.getAttribute("data-product-id"),
+                name: li.getAttribute("data-product-name"),
+                price: li.getAttribute("data-product-price"),
+                stock: stocksModuleEnabled ? li.getAttribute("data-product-stock") : null,
+                units: product.units ? product.units.filter(unit => unit !== null) : [], // Ensure units are included
+            };
+
+            addToCart(productToAdd);
+            searchResultsDiv.innerHTML = "";
+        };
+
+        // Click event
+        li.addEventListener("click", handleAddToCart);
+
+        // Keydown event for the Enter key
+        li.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.keyCode === 13) {
+                handleAddToCart();
+            }
+        });
+
+        ul.appendChild(li);
+    });
+    searchResultsDiv.appendChild(ul);
+}
 
 $(document).ready(function () {
     $("#saleForm").on("submit", function (e) {
@@ -626,8 +640,8 @@ $(document).ready(function () {
                 quantity: item.quantity,
                 UnitId: item.selectedUnit ? item.selectedUnit.id : null, // Add this line
                 variantId: item.variantId,
-                weight: item.weight,       
-                subtotal: item.subtotal,     
+                weight: item.weight,
+                subtotal: item.subtotal,
                 productPrice: item.productPrice,
                 // ... add other product details as needed
             })),
@@ -639,12 +653,12 @@ $(document).ready(function () {
             total_amount: parseFloat(grandTotal.toFixed(2)) || 0,
         };
 
-        
-        
 
-       
+
+
+
         // Post data to the server
-          $.ajax({
+        $.ajax({
             url: EditSaleUrl,
             type: "POST",
             data: formData,
@@ -652,15 +666,15 @@ $(document).ready(function () {
                 // Show toastr success message
                 toastr.success(response.message);
                 window.location.href = SaleslistPage
-               // location.reload(); // Refresh the page
+                // location.reload(); // Refresh the page
             },
             error: function (xhr, status, error) {
                 console.error(error);
                 toastr.error("Error occurred while creating the sale.");
                 // Handle error, show error messages
             },
-        });  
+        });
     });
 
-    
+
 });
