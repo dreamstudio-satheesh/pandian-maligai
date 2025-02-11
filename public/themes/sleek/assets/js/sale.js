@@ -14,7 +14,7 @@ function calculateDiscount(discountType, discountAmount) {
 }
 
 function calculateTax(taxRate) {
-   
+
     // Check if taxRate is 0 or not a number
     if (taxRate === 0 || isNaN(taxRate)) {
         return 0;
@@ -28,7 +28,7 @@ function calculateTax(taxRate) {
 
     return (taxRate / 100) * (totalWithoutTaxAndShipping - calculateDiscount(document.getElementById("discountType").value, parseFloat(document.getElementById("discountAmount").value) || 0));
 
-    
+
 }
 
 
@@ -55,10 +55,10 @@ function updateGrandTotal() {
     const shippingAmount = parseFloat(shippingAmountElement.value) || 0;
 
     const discount = calculateDiscount(discountType, discountAmount);
-     tax = calculateTax(taxRate);
+    tax = calculateTax(taxRate);
     // Calculate grandTotal
-     grandTotal =
-        totalWithoutTaxAndShipping - discount + tax + shippingAmount;  
+    grandTotal =
+        totalWithoutTaxAndShipping - discount + tax + shippingAmount;
 
     // Update the display for discount, tax, and grand total
     const displayDiscountElement = document.getElementById("display_discount");
@@ -75,9 +75,8 @@ function updateGrandTotal() {
     }
 
     if (displayDiscountElement)
-        displayDiscountElement.textContent = `₹ ${(+discount).toFixed(2)} (${
-            discountType === "percent" ? discountAmount + "%" : "Fixed"
-        })`;
+        displayDiscountElement.textContent = `₹ ${(+discount).toFixed(2)} (${discountType === "percent" ? discountAmount + "%" : "Fixed"
+            })`;
     if (displayTaxElement)
         displayTaxElement.textContent = `₹ ${(+tax).toFixed(2)} (${taxRate}%)`;
     if (grandTotalElement)
@@ -89,7 +88,7 @@ function updateGrandTotal() {
 
 function updateWeight(productIdentifier, newWeight, item, weightInput) {
     const itemIndex = cart.findIndex(item => item.productIdentifier === productIdentifier);
-   if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
+    if (itemIndex !== -1 && !isNaN(newWeight) && parseFloat(newWeight) > 0) {
         newWeight = parseFloat(newWeight);  // Ensure newWeight is a number
 
         // Check if the new weight is already a number with up to 3 decimal places
@@ -225,7 +224,7 @@ function updateQuantity(productIdentifier, newQuantity) {
                 return;
             }
         }
-        let subtotal=newQuantity * productInCart.productPrice;
+        let subtotal = newQuantity * productInCart.productPrice;
         cart[productIndex].quantity = newQuantity;
         cart[productIndex].subtotal = subtotal.toFixed(2);
         updateCartTable();
@@ -249,7 +248,7 @@ function updateProductQuantity(
         }
         cart[productIndex].quantity = Math.max(1, cart[productIndex].quantity); // Ensure quantity doesn't go below 1
         cart[productIndex].subtotal =
-            (cart[productIndex].quantity * cart[productIndex].productPrice).toFixed(2) ;
+            (cart[productIndex].quantity * cart[productIndex].productPrice).toFixed(2);
         updateCartTable(); // Re-render the cart table UI
     }
 }
@@ -302,7 +301,7 @@ function addToCart(product) {
         }
     } else {
 
-       // console.log(product);
+        // console.log(product);
         // New product, add to cart if stock permits or if stock module is not enabled
         if (!stocksModuleEnabled || (stocksModuleEnabled && product.stock >= 1)) {
             const newCartItem = {
@@ -386,7 +385,7 @@ function updateCartTable() {
             } else {
                 item.selectedUnit = null; // or handle appropriately
             }
-            
+
             // Recalculate the weight and update the subtotal
             updateWeight(item.productIdentifier, item.weight, item, weightInput);
         });
@@ -428,7 +427,7 @@ function updateCartTable() {
         priceCell.appendChild(priceInput);
         row.appendChild(priceCell);
 
-        
+
 
         // Stock Cell (only if stocksModuleEnabled is true)
         if (stocksModuleEnabled) {
@@ -598,8 +597,8 @@ function displaySearchResults(products) {
 
 
 
-$(document).ready(function() {
-    $(document).on('keydown', '#search-box', function(e) {
+$(document).ready(function () {
+    $(document).on('keydown', '#search-box', function (e) {
         // Check if Tab or Page Down was pressed
         if (e.keyCode === 9 || e.keyCode === 34) {
 
@@ -631,7 +630,7 @@ $(document).ready(function () {
     $("#saleForm").on("submit", function (e) {
         e.preventDefault();
 
-       
+
 
         // Prepare form data
         const formData = {
@@ -688,7 +687,7 @@ $(document).ready(function () {
 
 
                 // Optionally, you can refresh the page or redirect the user
-               location.reload(); // Refresh the page
+                location.reload(); // Refresh the page
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
@@ -700,14 +699,14 @@ $(document).ready(function () {
 
 
 
-    $('#customerForm').on('submit', function(e) {
+    $('#customerForm').on('submit', function (e) {
         e.preventDefault();
         // Get the values from the input fields
         var customerName = $('#newCustomerName').val();
         var customerPhone = $('#newCustomerPhone').val();
 
-         // Check if the customerName is empty
-         if (customerName.trim() === '') {
+        // Check if the customerName is empty
+        if (customerName.trim() === '') {
             // Show an error message, for example:
             alert('Customer Name cannot be empty');
             return; // Stop further execution
@@ -722,7 +721,7 @@ $(document).ready(function () {
                 phone: customerPhone,
                 _token: $('meta[name="csrf-token"]').attr("content") // Include CSRF token for Laravel
             },
-            success: function(response) {
+            success: function (response) {
                 // Assuming the response contains the id and name of the newly created customer
                 var newOption = $('<option>', {
                     value: response.id,
@@ -744,17 +743,17 @@ $(document).ready(function () {
     });
 
 
-    $('#customerType').change(function() {
+    $('#customerType').change(function () {
         var customerType = $(this).val(); // Get the selected customer type
         var queryParams = $.param({ type: customerType });
 
         $.ajax({
             url: customerTypeUrl + "?" + queryParams,
             type: "GET",
-            success: function(response) {
+            success: function (response) {
                 location.reload(); // Refresh the page
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.log('Error:', xhr.responseText); // Handle errors
             }
         });
