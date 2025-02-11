@@ -379,6 +379,23 @@ function updateCartTable() {
         unitCell.appendChild(unitSelect);
         row.appendChild(unitCell);
 
+        
+        // Price Input
+        const priceInput = document.createElement("input");
+        priceInput.type = "text";
+        priceInput.classList.add("form-control", "input-sm", "price-input");
+        priceInput.value = item.productPrice;
+        priceInput.addEventListener(
+            "input",
+            debounce((event) => {
+                updatePrice(item.productIdentifier, event.target.value);
+            })
+        );
+
+        const priceCell = document.createElement("td");
+        priceCell.appendChild(priceInput);
+        row.appendChild(priceCell);
+
         // Weight Input
         const weightInput = document.createElement("input");
         weightInput.type = "text";
@@ -395,21 +412,6 @@ function updateCartTable() {
         weightCell.appendChild(weightInput);
         row.appendChild(weightCell);
 
-        // Price Input
-        const priceInput = document.createElement("input");
-        priceInput.type = "text";
-        priceInput.classList.add("form-control", "input-sm", "price-input");
-        priceInput.value = item.productPrice;
-        priceInput.addEventListener(
-            "input",
-            debounce((event) => {
-                updatePrice(item.productIdentifier, event.target.value);
-            })
-        );
-
-        const priceCell = document.createElement("td");
-        priceCell.appendChild(priceInput);
-        row.appendChild(priceCell);
 
         
 

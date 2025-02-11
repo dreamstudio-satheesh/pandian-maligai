@@ -630,8 +630,6 @@ $(document).ready(function () {
     $("#saleForm").on("submit", function (e) {
         e.preventDefault();
 
-
-
         // Prepare form data
         const formData = {
             _token: $('meta[name="csrf-token"]').attr("content"),
