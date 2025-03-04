@@ -653,10 +653,6 @@ $(document).ready(function () {
             total_amount: parseFloat(grandTotal.toFixed(2)) || 0,
         };
 
-
-
-
-
         // Post data to the server
         $.ajax({
             url: EditSaleUrl,

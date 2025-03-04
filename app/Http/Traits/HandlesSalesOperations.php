@@ -217,12 +217,12 @@ trait HandlesSalesOperations
                 SalesItem::create([
                     'sale_id' => $sale->id,
                     'product_id' => $item['productId'],
+                    'unit_id' => $item['UnitId'],
                     'quantity' => $item['quantity'],
                     'price' => $item['productPrice'],
                     'weight' => $item['weight'],
-                    'unit_id' => $item['UnitId'],
                     'variant_id' => null,
-                    'subtotal' => $subtotal,
+                    'subtotal' => $item['subtotal'],
                     // Include variant_id and other fields as necessary...
                 ]);
             }

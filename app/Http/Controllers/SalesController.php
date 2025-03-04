@@ -180,7 +180,7 @@ class SalesController extends Controller
                     'productName' => $productName,
                     'productPrice' => (float) $item->price,
                     'quantity' => (int) $item->quantity,
-                    'weight' => (int) $item->weight,
+                    'weight' => (float) $item->weight,
                     'variantId' => $item->variant_id ? (string) $item->variant_id : null,
                     'stock' => (float) $item->current_stock,
                     'units'           => $units->toArray(),  // Pass available units
@@ -188,7 +188,6 @@ class SalesController extends Controller
                 ];
             })
             ->toJson();
-
         // return $sales;
         return view('sales.edit', compact('customers', 'warehouses', 'sales', 'cartItems'));
     }
