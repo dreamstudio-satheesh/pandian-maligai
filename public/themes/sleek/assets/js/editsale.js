@@ -661,6 +661,9 @@ $(document).ready(function () {
             success: function (response) {
                 // Show toastr success message
                 toastr.success(response.message);
+                
+                 window.open('http://localhost/pos/' + response.salesId, '_blank');
+                
                 window.location.href = SaleslistPage
                 // location.reload(); // Refresh the page
             },
